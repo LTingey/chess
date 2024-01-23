@@ -18,7 +18,7 @@ public abstract class PieceMovesCalculator {
         validMoves.add(move);
     }
 
-    protected boolean IsAvaliableSquare(ChessPosition newPosition) {
+    protected boolean IsAvailableSquare(ChessPosition newPosition) {
         // check out of bounds
         if (newPosition.getRow()<1 || newPosition.getRow()>8 || newPosition.getColumn()<1 || newPosition.getColumn()>8) {
             return false;
@@ -30,9 +30,13 @@ public abstract class PieceMovesCalculator {
         return true;
     }
 
+    protected boolean IsOccupied(ChessPosition position) {
+        return (board.getPiece((position)) != null);
+    }
+
     protected void AddValidMove(ChessPosition newPosition) {
         ChessMove move = new ChessMove(position, newPosition, null);
-        validMoves.add(move);
+        AddMove(move);
     }
 
     public abstract Collection<ChessMove> pieceMoves();

@@ -30,7 +30,7 @@ public class KnightMovesCalculator extends PieceMovesCalculator{
         pieceRange.add(new ChessPosition(position.getRow()-2, position.getColumn()+1));
 
         for (ChessPosition square : pieceRange) {
-            if (IsAvaliableSquare(square)) {
+            if (IsAvailableSquare(square)) {
                 AddValidMove(square);
             }
         }
