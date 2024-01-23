@@ -30,6 +30,14 @@ public abstract class PieceMovesCalculator {
         return true;
     }
 
+    protected  void FindValidMoves(Collection<ChessPosition> pieceRange) {
+        for (ChessPosition square : pieceRange) {
+            if (IsAvaliableSquare(square)) {
+                ChessMove move = new ChessMove(position, square, null);
+                validMoves.add(move);
+            }
+        }
+    }
 
     public abstract Collection<ChessMove> pieceMoves();
 }

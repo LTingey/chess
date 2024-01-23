@@ -9,6 +9,8 @@ public class RookMovesCalculator extends PieceMovesCalculator{
 
     @Override
     public Collection<ChessMove> pieceMoves() {
-        return null;
+
+
+        return validMoves;
     }
 }
