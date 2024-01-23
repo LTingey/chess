@@ -12,5 +12,9 @@ public abstract class PieceMovesCalculator {
         this.position = position;
     }
 
+    protected boolean isOutOfBounds(int row, int col) {
+        return row<1 || row>8 || col<1 || col>8;
+    }
+
     public abstract Collection<ChessMove> pieceMoves();
 }
