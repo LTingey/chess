@@ -13,7 +13,7 @@ public class BishopMovesCalculator extends PieceMovesCalculator{
         for (int i = position.getRow()+1, j = position.getColumn()-1; i<9 && j>0; i++, j--) {
             ChessPosition newPosition = new ChessPosition(i,j);
             if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition);
+                AddValidMove(newPosition, null);
             }
             if (IsOccupied(newPosition)) {
                 break;
@@ -23,7 +23,7 @@ public class BishopMovesCalculator extends PieceMovesCalculator{
         for (int i = position.getRow()-1, j = position.getColumn()-1; i>0 && j>0; i--, j--) {
             ChessPosition newPosition = new ChessPosition(i,j);
             if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition);
+                AddValidMove(newPosition, null);
             }
             if (IsOccupied(newPosition)) {
                 break;
@@ -33,7 +33,7 @@ public class BishopMovesCalculator extends PieceMovesCalculator{
         for (int i = position.getRow()+1, j = position.getColumn()+1; i<9 && j<9; i++, j++) {
             ChessPosition newPosition = new ChessPosition(i,j);
             if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition);
+                AddValidMove(newPosition, null);
             }
             if (IsOccupied(newPosition)) {
                 break;
@@ -43,7 +43,7 @@ public class BishopMovesCalculator extends PieceMovesCalculator{
         for (int i = position.getRow()-1, j = position.getColumn()+1; i>0 && j<9; i--, j++) {
             ChessPosition newPosition = new ChessPosition(i,j);
             if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition);
+                AddValidMove(newPosition, null);
             }
             if (IsOccupied(newPosition)) {
                 break;

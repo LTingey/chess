@@ -13,7 +13,7 @@ public class RookMovesCalculator extends PieceMovesCalculator{
         for (int i = position.getRow()+1; i<9; i++) {
             ChessPosition newPosition = new ChessPosition(i, position.getColumn());
             if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition);
+                AddValidMove(newPosition, null);
             }
             if (IsOccupied(newPosition)) {
                 break;
@@ -23,7 +23,7 @@ public class RookMovesCalculator extends PieceMovesCalculator{
         for (int i = position.getRow()-1; i>0; i--) {
             ChessPosition newPosition = new ChessPosition(i, position.getColumn());
             if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition);
+                AddValidMove(newPosition, null);
             }
             if (IsOccupied(newPosition)) {
                 break;
@@ -33,7 +33,7 @@ public class RookMovesCalculator extends PieceMovesCalculator{
         for (int i = position.getColumn()-1; i>0; i--) {
             ChessPosition newPosition = new ChessPosition(position.getRow(), i);
             if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition);
+                AddValidMove(newPosition, null);
             }
             if (IsOccupied(newPosition)) {
                 break;
@@ -43,7 +43,7 @@ public class RookMovesCalculator extends PieceMovesCalculator{
         for (int i = position.getColumn()+1; i<9; i++) {
             ChessPosition newPosition = new ChessPosition(position.getRow(), i);
             if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition);
+                AddValidMove(newPosition, null);
             }
             if (IsOccupied(newPosition)) {
                 break;

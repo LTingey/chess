@@ -31,7 +31,7 @@ public class KnightMovesCalculator extends PieceMovesCalculator{
 
         for (ChessPosition square : pieceRange) {
             if (IsAvailableSquare(square)) {
-                AddValidMove(square);
+                AddValidMove(square, null);
             }
         }
 

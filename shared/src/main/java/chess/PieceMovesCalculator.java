@@ -34,8 +34,8 @@ public abstract class PieceMovesCalculator {
         return (board.getPiece((position)) != null);
     }
 
-    protected void AddValidMove(ChessPosition newPosition) {
-        ChessMove move = new ChessMove(position, newPosition, null);
+    protected void AddValidMove(ChessPosition newPosition, ChessPiece.PieceType promotionPiece) {
+        ChessMove move = new ChessMove(position, newPosition, promotionPiece);
         AddMove(move);
     }
 
