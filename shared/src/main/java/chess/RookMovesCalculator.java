@@ -3,8 +3,8 @@ package chess;
 import java.util.Collection;
 
 public class RookMovesCalculator extends PieceMovesCalculator{
-    public RookMovesCalculator(ChessBoard board, ChessPosition position) {
-        super(board, position);
+    public RookMovesCalculator(ChessBoard board, ChessPosition position, ChessGame.TeamColor pieceColor) {
+        super(board, position, pieceColor);
     }
 
     @Override

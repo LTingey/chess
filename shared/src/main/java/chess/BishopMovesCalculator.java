@@ -3,8 +3,8 @@ package chess;
 import java.util.Collection;
 
 public class BishopMovesCalculator extends PieceMovesCalculator{
-    public BishopMovesCalculator(ChessBoard board, ChessPosition position) {
-        super(board, position);
+    public BishopMovesCalculator(ChessBoard board, ChessPosition position, ChessGame.TeamColor pieceColor) {
+        super(board, position, pieceColor);
     }
 
     @Override

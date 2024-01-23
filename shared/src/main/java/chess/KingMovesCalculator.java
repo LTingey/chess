@@ -1,27 +1,41 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class KingMovesCalculator extends PieceMovesCalculator{
-    public KingMovesCalculator(ChessBoard board, ChessPosition position) {
-        super(board, position);
+    public KingMovesCalculator(ChessBoard board, ChessPosition position, ChessGame.TeamColor pieceColor) {
+        super(board, position, pieceColor);
     }
 
     @Override
     public Collection<ChessMove> pieceMoves() {
-        for (int i = position.getRow()-1; i < position.getRow()+1; i++) {
-            if (i>=1 && i<=8) {
-                for (int j = position.getColumn()-1; j < position.getColumn()+1; j++) {
-                    if (j>=1 && j<=8 && (i!=position.getRow() && j!=position.getColumn())) {
-                        // check that the moves are still on the board
-                        // and exclude the current position from being added to the array
-                        ChessPosition newPosition = new ChessPosition(i,j);
-                        ChessMove optionalMove = new ChessMove(position,newPosition,null);
-                        moves.add(optionalMove);
-                    }
-                }
+        ArrayList<ChessPosition> pieceRange = new ArrayList<ChessPosition>();
+
+        // upper left
+        pieceRange.add(new ChessPosition(position.getRow()+1, position.getColumn()-1));
+        // above
+        pieceRange.add(new ChessPosition(position.getRow()+1, position.getColumn()));
+        // upper right
+        pieceRange.add(new ChessPosition(position.getRow()+1, position.getColumn()+1));
+        // left
+        pieceRange.add(new ChessPosition(position.getRow(), position.getColumn()-1));
+        // right
+        pieceRange.add(new ChessPosition(position.getRow(), position.getColumn()+1));
+        // lower left
+        pieceRange.add(new ChessPosition(position.getRow()-1, position.getColumn()-1));
+        // below
+        pieceRange.add(new ChessPosition(position.getRow()-1, position.getColumn()));
+        // lower right
+        pieceRange.add(new ChessPosition(position.getRow()-1, position.getColumn()+1));
+
+        for (ChessPosition square : pieceRange) {
+            if (IsAvaliableSquare(square)) {
+                ChessMove move = new ChessMove(position, square, null);
+                validMoves.add(move);
             }
         }
-        return null;
+
+        return validMoves;
     }
 }
