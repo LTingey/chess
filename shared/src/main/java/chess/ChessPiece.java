@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -10,7 +11,12 @@ import java.util.Collection;
  */
 public class ChessPiece {
 
+    private final ChessGame.TeamColor pieceColor;
+    private final ChessPiece.PieceType type;
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+        this.pieceColor = pieceColor;
+        this.type = type;
     }
 
     /**
@@ -29,14 +35,14 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return pieceColor;
     }
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        throw new RuntimeException("Not implemented");
+        return type;
     }
 
     /**
@@ -47,6 +53,32 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        switch (type) {
+            case KING -> {
+                KingMovesCalculator kingMoves = new KingMovesCalculator(board, myPosition);
+                return kingMoves.pieceMoves();
+            }
+            case QUEEN -> {
+                QueenMovesCalculator queenMoves = new QueenMovesCalculator(board, myPosition);
+                return queenMoves.pieceMoves();
+            }
+            case BISHOP -> {
+                BishopMovesCalculator bishopMoves = new BishopMovesCalculator(board, myPosition);
+                return bishopMoves.pieceMoves();
+            }
+            case KNIGHT -> {
+                KnightMovesCalculator knightMoves = new KnightMovesCalculator(board, myPosition);
+                return knightMoves.pieceMoves();
+            }
+            case ROOK -> {
+                RookMovesCalculator rookMoves = new RookMovesCalculator(board, myPosition);
+                return rookMoves.pieceMoves();
+            }
+            case PAWN -> {
+                PawnMovesCalculator pawnMoves = new PawnMovesCalculator(board, myPosition);
+                return pawnMoves.pieceMoves();
+            }
+        }
+        return new ArrayList<>();
     }
 }
