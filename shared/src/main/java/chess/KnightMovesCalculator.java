@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class KnightMovesCalculator extends PieceMovesCalculator{
@@ -9,6 +10,32 @@ public class KnightMovesCalculator extends PieceMovesCalculator{
 
     @Override
     public Collection<ChessMove> pieceMoves() {
-        return null;
+        ArrayList<ChessPosition> pieceRange = new ArrayList<ChessPosition>();
+
+        // up 2, left 1
+        pieceRange.add(new ChessPosition(position.getRow()+2, position.getColumn()-1));
+        // up 2, right 1
+        pieceRange.add(new ChessPosition(position.getRow()+2, position.getColumn()+1));
+        // up 1, left 2
+        pieceRange.add(new ChessPosition(position.getRow()+1, position.getColumn()-2));
+        // up 1, right 2
+        pieceRange.add(new ChessPosition(position.getRow()+1, position.getColumn()+2));
+        // down 1, left 2
+        pieceRange.add(new ChessPosition(position.getRow()-1, position.getColumn()-2));
+        // down 1, right 2
+        pieceRange.add(new ChessPosition(position.getRow()-1, position.getColumn()+2));
+        // down 2, left 1
+        pieceRange.add(new ChessPosition(position.getRow()-2, position.getColumn()-1));
+        // down 2, right 1
+        pieceRange.add(new ChessPosition(position.getRow()-2, position.getColumn()+1));
+
+        for (ChessPosition square : pieceRange) {
+            if (IsAvaliableSquare(square)) {
+                ChessMove move = new ChessMove(position, square, null);
+                validMoves.add(move);
+            }
+        }
+
+        return validMoves;
     }
 }
