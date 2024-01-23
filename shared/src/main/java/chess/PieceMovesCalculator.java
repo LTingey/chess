@@ -19,24 +19,20 @@ public abstract class PieceMovesCalculator {
     }
 
     protected boolean IsAvaliableSquare(ChessPosition newPosition) {
-        // out of bounds
+        // check out of bounds
         if (newPosition.getRow()<1 || newPosition.getRow()>8 || newPosition.getColumn()<1 || newPosition.getColumn()>8) {
             return false;
         }
-        // same color
+        // check same color piece already there
         if ((board.getPiece((newPosition)) != null) && (board.getPiece(newPosition).getTeamColor() == pieceColor)) {
             return false;
         }
         return true;
     }
 
-    protected  void FindValidMoves(Collection<ChessPosition> pieceRange) {
-        for (ChessPosition square : pieceRange) {
-            if (IsAvaliableSquare(square)) {
-                ChessMove move = new ChessMove(position, square, null);
-                validMoves.add(move);
-            }
-        }
+    protected void AddValidMove(ChessPosition newPosition) {
+        ChessMove move = new ChessMove(position, newPosition, null);
+        validMoves.add(move);
     }
 
     public abstract Collection<ChessMove> pieceMoves();

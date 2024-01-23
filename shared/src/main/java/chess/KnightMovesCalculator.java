@@ -29,7 +29,11 @@ public class KnightMovesCalculator extends PieceMovesCalculator{
         // down 2, right 1
         pieceRange.add(new ChessPosition(position.getRow()-2, position.getColumn()+1));
 
-        FindValidMoves(pieceRange);
+        for (ChessPosition square : pieceRange) {
+            if (IsAvaliableSquare(square)) {
+                AddValidMove(square);
+            }
+        }
 
         return validMoves;
     }
