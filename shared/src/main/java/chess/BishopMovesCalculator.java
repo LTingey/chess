@@ -9,6 +9,46 @@ public class BishopMovesCalculator extends PieceMovesCalculator{
 
     @Override
     public Collection<ChessMove> pieceMoves() {
-        return null;
+        // up left
+        for (int i = position.getRow()+1, j = position.getColumn()-1; i<9 && j>0; i++, j--) {
+            ChessPosition newPosition = new ChessPosition(i,j);
+            if (IsAvailableSquare(newPosition)) {
+                AddValidMove(newPosition);
+            }
+            if (IsOccupied(newPosition)) {
+                break;
+            }
+        }
+        // down left
+        for (int i = position.getRow()-1, j = position.getColumn()-1; i>0 && j>0; i--, j--) {
+            ChessPosition newPosition = new ChessPosition(i,j);
+            if (IsAvailableSquare(newPosition)) {
+                AddValidMove(newPosition);
+            }
+            if (IsOccupied(newPosition)) {
+                break;
+            }
+        }
+        // up right
+        for (int i = position.getRow()+1, j = position.getColumn()+1; i<9 && j<9; i++, j++) {
+            ChessPosition newPosition = new ChessPosition(i,j);
+            if (IsAvailableSquare(newPosition)) {
+                AddValidMove(newPosition);
+            }
+            if (IsOccupied(newPosition)) {
+                break;
+            }
+        }
+        // down right
+        for (int i = position.getRow()-1, j = position.getColumn()+1; i>0 && j<9; i--, j++) {
+            ChessPosition newPosition = new ChessPosition(i,j);
+            if (IsAvailableSquare(newPosition)) {
+                AddValidMove(newPosition);
+            }
+            if (IsOccupied(newPosition)) {
+                break;
+            }
+        }
+        return validMoves;
     }
 }
