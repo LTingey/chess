@@ -10,42 +10,42 @@ public class RookMovesCalculator extends PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves() {
         // up
-        for (int i = position.getRow()+1; i<9; i++) {
-            ChessPosition newPosition = new ChessPosition(i, position.getColumn());
-            if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition, null);
+        for (int i = currentPosition.getRow()+1; i<9; i++) {
+            ChessPosition newPosition = new ChessPosition(i, currentPosition.getColumn());
+            if (isAvailableSquare(newPosition)) {
+                addValidMove(newPosition, null);
             }
-            if (IsOccupied(newPosition)) {
+            if (isOccupied(newPosition)) {
                 break;
             }
         }
         // down
-        for (int i = position.getRow()-1; i>0; i--) {
-            ChessPosition newPosition = new ChessPosition(i, position.getColumn());
-            if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition, null);
+        for (int i = currentPosition.getRow()-1; i>0; i--) {
+            ChessPosition newPosition = new ChessPosition(i, currentPosition.getColumn());
+            if (isAvailableSquare(newPosition)) {
+                addValidMove(newPosition, null);
             }
-            if (IsOccupied(newPosition)) {
+            if (isOccupied(newPosition)) {
                 break;
             }
         }
         // left
-        for (int i = position.getColumn()-1; i>0; i--) {
-            ChessPosition newPosition = new ChessPosition(position.getRow(), i);
-            if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition, null);
+        for (int i = currentPosition.getColumn()-1; i>0; i--) {
+            ChessPosition newPosition = new ChessPosition(currentPosition.getRow(), i);
+            if (isAvailableSquare(newPosition)) {
+                addValidMove(newPosition, null);
             }
-            if (IsOccupied(newPosition)) {
+            if (isOccupied(newPosition)) {
                 break;
             }
         }
         // right
-        for (int i = position.getColumn()+1; i<9; i++) {
-            ChessPosition newPosition = new ChessPosition(position.getRow(), i);
-            if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition, null);
+        for (int i = currentPosition.getColumn()+1; i<9; i++) {
+            ChessPosition newPosition = new ChessPosition(currentPosition.getRow(), i);
+            if (isAvailableSquare(newPosition)) {
+                addValidMove(newPosition, null);
             }
-            if (IsOccupied(newPosition)) {
+            if (isOccupied(newPosition)) {
                 break;
             }
         }

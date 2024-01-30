@@ -7,129 +7,115 @@ public class PawnMovesCalculator extends PieceMovesCalculator{
         super(board, position, pieceColor);
     }
 
-    public void PromoteAndAdd(ChessPosition newPosition) {
-        AddValidMove(newPosition, ChessPiece.PieceType.ROOK);
-        AddValidMove(newPosition, ChessPiece.PieceType.KNIGHT);
-        AddValidMove(newPosition, ChessPiece.PieceType.BISHOP);
-        AddValidMove(newPosition, ChessPiece.PieceType.QUEEN);
+    private void promoteAndAdd(ChessPosition newPosition) {
+        addValidMove(newPosition, ChessPiece.PieceType.ROOK);
+        addValidMove(newPosition, ChessPiece.PieceType.KNIGHT);
+        addValidMove(newPosition, ChessPiece.PieceType.BISHOP);
+        addValidMove(newPosition, ChessPiece.PieceType.QUEEN);
+    }
+
+    private boolean endOfBoard(ChessPosition newPosition) {
+        if (pieceColor == ChessGame.TeamColor.WHITE) {
+            return newPosition.getRow() == 8;
+        }
+        else {
+            return newPosition.getRow() == 1;
+        }
+    }
+
+    private void checkPromoteAndAdd(ChessPosition newPosition) {
+        if (endOfBoard(newPosition)) {
+            promoteAndAdd(newPosition);
+        }
+        else {
+            addValidMove(newPosition, null);
+        }
+    }
+
+    private void checkLeftDiagonal() {
+        ChessPosition newPosition;
+
+        // WHITE
+        if (pieceColor == ChessGame.TeamColor.WHITE) {
+            newPosition = new ChessPosition(currentPosition.getRow()+1, currentPosition.getColumn()-1);
+        }
+        else {
+            newPosition = new ChessPosition(currentPosition.getRow()-1, currentPosition.getColumn()-1);
+        }
+
+        // check if occupied by enemy
+        if (isOccupied(newPosition)) {
+            if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
+                checkPromoteAndAdd(newPosition);
+            }
+        }
+    }
+
+    private void checkRightDiagonal() {
+        ChessPosition newPosition;
+
+        // WHITE
+        if (pieceColor == ChessGame.TeamColor.WHITE) {
+            newPosition = new ChessPosition(currentPosition.getRow()+1, currentPosition.getColumn()+1);
+        }
+        else {
+            newPosition = new ChessPosition(currentPosition.getRow()-1, currentPosition.getColumn()+1);
+        }
+
+        // check if occupied by enemy
+        if (isOccupied(newPosition)) {
+            if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
+                checkPromoteAndAdd(newPosition);
+            }
+        }
     }
 
     @Override
     public Collection<ChessMove> pieceMoves() {
+        ChessPosition newPosition;
+
         // WHITE
         if (pieceColor == ChessGame.TeamColor.WHITE) {
             // check square in front
-            ChessPosition newPosition = new ChessPosition(position.getRow()+1, position.getColumn());
-            // check if occupied
-            if (!IsOccupied(newPosition)) {
-                // check if end of board
-                if (newPosition.getRow() == 8) {
-                    PromoteAndAdd(newPosition);
-                }
-                else {
-                    AddValidMove(newPosition, null);
+            newPosition = new ChessPosition(currentPosition.getRow() + 1, currentPosition.getColumn());
+            if (!isOccupied(newPosition)) {
+                checkPromoteAndAdd(newPosition);
+
+                if (!endOfBoard(newPosition)) {
                     // check if first move
-                    if (position.getRow() == 2) {
+                    if (currentPosition.getRow() == 2) {
                         // check 2 spaces ahead
-                        newPosition = new ChessPosition(position.getRow()+2, position.getColumn());
-                        if (!IsOccupied(newPosition)) {
-                            // check if end of board
-                            if (newPosition.getRow() == 8) {
-                                PromoteAndAdd(newPosition);
-                            }
-                            else {
-                                AddValidMove(newPosition, null);
-                            }
+                        newPosition = new ChessPosition(currentPosition.getRow()+2, currentPosition.getColumn());
+                        if (!isOccupied(newPosition)) {
+                            checkPromoteAndAdd(newPosition);
                         }
                     }
                 }
             }
-            // check left diagonal
-            newPosition = new ChessPosition(position.getRow()+1, position.getColumn()-1);
-            // check if occupied by enemy
-            if (IsOccupied(newPosition)) {
-                if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
-                    // check if end of board
-                    if (newPosition.getRow() == 8) {
-                        PromoteAndAdd(newPosition);
-                    }
-                    else {
-                        AddValidMove(newPosition, null);
-                    }
-                }
-            }
-            // check right diagonal
-            newPosition = new ChessPosition(position.getRow()+1, position.getColumn()+1);
-            // check if occupied by enemy
-            if (IsOccupied(newPosition)) {
-                if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
-                    // check if end of board
-                    if (newPosition.getRow() == 8) {
-                        PromoteAndAdd(newPosition);
-                    }
-                    else {
-                        AddValidMove(newPosition, null);
-                    }
-                }
-            }
         }
+
         // BLACK
         else {
             // check square in front
-            ChessPosition newPosition = new ChessPosition(position.getRow()-1, position.getColumn());
-            // check if occupied
-            if (!IsOccupied(newPosition)) {
-                // check if end of board
-                if (newPosition.getRow() == 1) {
-                    PromoteAndAdd(newPosition);
-                }
-                else {
-                    AddValidMove(newPosition, null);
+            newPosition = new ChessPosition(currentPosition.getRow() - 1, currentPosition.getColumn());
+            if (!isOccupied(newPosition)) {
+                checkPromoteAndAdd(newPosition);
+
+                if (!endOfBoard(newPosition)) {
                     // check if first move
-                    if (position.getRow() == 7) {
+                    if (currentPosition.getRow() == 7) {
                         // check 2 spaces ahead
-                        newPosition = new ChessPosition(position.getRow()-2, position.getColumn());
-                        if (!IsOccupied(newPosition)) {
-                            // check if end of board
-                            if (newPosition.getRow() == 1) {
-                                PromoteAndAdd(newPosition);
-                            }
-                            else {
-                                AddValidMove(newPosition, null);
-                            }
+                        newPosition = new ChessPosition(currentPosition.getRow()-2, currentPosition.getColumn());
+                        if (!isOccupied(newPosition)) {
+                            checkPromoteAndAdd(newPosition);
                         }
                     }
                 }
             }
-            // check left diagonal
-            newPosition = new ChessPosition(position.getRow()-1, position.getColumn()-1);
-            // check if occupied by enemy
-            if (IsOccupied(newPosition)) {
-                if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
-                    // check if end of board
-                    if (newPosition.getRow() == 1) {
-                        PromoteAndAdd(newPosition);
-                    }
-                    else {
-                        AddValidMove(newPosition, null);
-                    }
-                }
-            }
-            // check right diagonal
-            newPosition = new ChessPosition(position.getRow()-1, position.getColumn()+1);
-            // check if occupied by enemy
-            if (IsOccupied(newPosition)) {
-                if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
-                    // check if end of board
-                    if (newPosition.getRow() == 1) {
-                        PromoteAndAdd(newPosition);
-                    }
-                    else {
-                        AddValidMove(newPosition, null);
-                    }
-                }
-            }
         }
+
+        checkLeftDiagonal();
+        checkRightDiagonal();
 
         return validMoves;
     }

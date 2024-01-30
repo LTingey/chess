@@ -13,25 +13,25 @@ public class KingMovesCalculator extends PieceMovesCalculator{
         ArrayList<ChessPosition> pieceRange = new ArrayList<ChessPosition>();
 
         // upper left
-        pieceRange.add(new ChessPosition(position.getRow()+1, position.getColumn()-1));
+        pieceRange.add(new ChessPosition(currentPosition.getRow()+1, currentPosition.getColumn()-1));
         // above
-        pieceRange.add(new ChessPosition(position.getRow()+1, position.getColumn()));
+        pieceRange.add(new ChessPosition(currentPosition.getRow()+1, currentPosition.getColumn()));
         // upper right
-        pieceRange.add(new ChessPosition(position.getRow()+1, position.getColumn()+1));
+        pieceRange.add(new ChessPosition(currentPosition.getRow()+1, currentPosition.getColumn()+1));
         // left
-        pieceRange.add(new ChessPosition(position.getRow(), position.getColumn()-1));
+        pieceRange.add(new ChessPosition(currentPosition.getRow(), currentPosition.getColumn()-1));
         // right
-        pieceRange.add(new ChessPosition(position.getRow(), position.getColumn()+1));
+        pieceRange.add(new ChessPosition(currentPosition.getRow(), currentPosition.getColumn()+1));
         // lower left
-        pieceRange.add(new ChessPosition(position.getRow()-1, position.getColumn()-1));
+        pieceRange.add(new ChessPosition(currentPosition.getRow()-1, currentPosition.getColumn()-1));
         // below
-        pieceRange.add(new ChessPosition(position.getRow()-1, position.getColumn()));
+        pieceRange.add(new ChessPosition(currentPosition.getRow()-1, currentPosition.getColumn()));
         // lower right
-        pieceRange.add(new ChessPosition(position.getRow()-1, position.getColumn()+1));
+        pieceRange.add(new ChessPosition(currentPosition.getRow()-1, currentPosition.getColumn()+1));
 
         for (ChessPosition square : pieceRange) {
-            if (IsAvailableSquare(square)) {
-                AddValidMove(square, null);
+            if (isAvailableSquare(square)) {
+                addValidMove(square, null);
             }
         }
 

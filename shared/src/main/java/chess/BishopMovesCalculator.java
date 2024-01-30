@@ -10,42 +10,42 @@ public class BishopMovesCalculator extends PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves() {
         // up left
-        for (int i = position.getRow()+1, j = position.getColumn()-1; i<9 && j>0; i++, j--) {
+        for (int i = currentPosition.getRow()+1, j = currentPosition.getColumn()-1; i<9 && j>0; i++, j--) {
             ChessPosition newPosition = new ChessPosition(i,j);
-            if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition, null);
+            if (isAvailableSquare(newPosition)) {
+                addValidMove(newPosition, null);
             }
-            if (IsOccupied(newPosition)) {
+            if (isOccupied(newPosition)) {
                 break;
             }
         }
         // down left
-        for (int i = position.getRow()-1, j = position.getColumn()-1; i>0 && j>0; i--, j--) {
+        for (int i = currentPosition.getRow()-1, j = currentPosition.getColumn()-1; i>0 && j>0; i--, j--) {
             ChessPosition newPosition = new ChessPosition(i,j);
-            if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition, null);
+            if (isAvailableSquare(newPosition)) {
+                addValidMove(newPosition, null);
             }
-            if (IsOccupied(newPosition)) {
+            if (isOccupied(newPosition)) {
                 break;
             }
         }
         // up right
-        for (int i = position.getRow()+1, j = position.getColumn()+1; i<9 && j<9; i++, j++) {
+        for (int i = currentPosition.getRow()+1, j = currentPosition.getColumn()+1; i<9 && j<9; i++, j++) {
             ChessPosition newPosition = new ChessPosition(i,j);
-            if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition, null);
+            if (isAvailableSquare(newPosition)) {
+                addValidMove(newPosition, null);
             }
-            if (IsOccupied(newPosition)) {
+            if (isOccupied(newPosition)) {
                 break;
             }
         }
         // down right
-        for (int i = position.getRow()-1, j = position.getColumn()+1; i>0 && j<9; i--, j++) {
+        for (int i = currentPosition.getRow()-1, j = currentPosition.getColumn()+1; i>0 && j<9; i--, j++) {
             ChessPosition newPosition = new ChessPosition(i,j);
-            if (IsAvailableSquare(newPosition)) {
-                AddValidMove(newPosition, null);
+            if (isAvailableSquare(newPosition)) {
+                addValidMove(newPosition, null);
             }
-            if (IsOccupied(newPosition)) {
+            if (isOccupied(newPosition)) {
                 break;
             }
         }
