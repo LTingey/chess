@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -24,7 +25,7 @@ public class ChessGame {
     }
 
     /**
-     * Set's which teams turn it is
+     * Sets which teams turn it is
      *
      * @param team the team whose turn it is
      */
@@ -48,7 +49,8 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        return piece.pieceMoves(board, startPosition);
     }
 
     /**
@@ -58,7 +60,55 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece piece = board.getPiece(startPosition);
+        TeamColor pieceColor = piece.getTeamColor();
+
+        // check if it's their turn
+        if (pieceColor != getTeamTurn()) {
+            throw new InvalidMoveException();
+        }
+
+        // check if it is a valid move
+        Collection<ChessMove> validMoves = piece.pieceMoves(board, startPosition);
+        boolean isValidMove = false;
+        for (ChessMove validMove: validMoves) {
+            if (validMove.equals(move)) {
+                isValidMove = true;
+                break;
+            }
+        }
+        if (!isValidMove) {
+            throw new InvalidMoveException();
+        }
+
+        // make the move
+        ChessPiece capturedPiece = board.getPiece(endPosition);
+        board.addPiece(endPosition, piece);
+        board.addPiece(startPosition, null);
+        // check if it leaves the king in danger
+        if (isInCheck(pieceColor)) {
+            undoMove(move, capturedPiece);
+            throw new InvalidMoveException();
+        }
+
+        // change team turn
+        if (getTeamTurn() == TeamColor.WHITE) {
+            setTeamTurn(TeamColor.BLACK);
+        }
+        else {
+            setTeamTurn(TeamColor.WHITE);
+        }
+    }
+
+    private void undoMove(ChessMove move, ChessPiece capturedPiece) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece piece = board.getPiece(endPosition);
+
+        board.addPiece(startPosition, piece);
+        board.addPiece(endPosition, capturedPiece);
     }
 
     /**
@@ -68,7 +118,8 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+//        throw new RuntimeException("Not implemented");
+        return false;
     }
 
     /**
@@ -78,7 +129,13 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (!isInCheck(teamColor)) {
+            return false;
+        }
+        // test all the moves to see if any get you out of check
+        // one way: clone the board and make a move (simplest, but expensive)
+        // another way: implement an undo move (harder)
+        return true;
     }
 
     /**
