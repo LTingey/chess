@@ -43,10 +43,12 @@ public class PawnMovesCalculator extends PieceMovesCalculator{
             newPosition = new ChessPosition(currentPosition.getRow()-1, currentPosition.getColumn()-1);
         }
 
-        // check if occupied by enemy
-        if (isOccupied(newPosition)) {
-            if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
-                checkPromoteAndAdd(newPosition);
+        if (isInBounds(newPosition)) {
+            // check if occupied by enemy
+            if (isOccupied(newPosition)) {
+                if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
+                    checkPromoteAndAdd(newPosition);
+                }
             }
         }
     }
@@ -62,10 +64,12 @@ public class PawnMovesCalculator extends PieceMovesCalculator{
             newPosition = new ChessPosition(currentPosition.getRow()-1, currentPosition.getColumn()+1);
         }
 
-        // check if occupied by enemy
-        if (isOccupied(newPosition)) {
-            if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
-                checkPromoteAndAdd(newPosition);
+        if (isInBounds(newPosition)) {
+            // check if occupied by enemy
+            if (isOccupied(newPosition)) {
+                if (board.getPiece(newPosition).getTeamColor() != pieceColor) {
+                    checkPromoteAndAdd(newPosition);
+                }
             }
         }
     }

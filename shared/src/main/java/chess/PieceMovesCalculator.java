@@ -16,7 +16,7 @@ public abstract class PieceMovesCalculator {
 
     protected boolean isAvailableSquare(ChessPosition newPosition) {
         // check out of bounds
-        if (newPosition.getRow()<1 || newPosition.getRow()>8 || newPosition.getColumn()<1 || newPosition.getColumn()>8) {
+        if (!isInBounds(newPosition)) {
             return false;
         }
         // check same color piece already there
@@ -24,6 +24,10 @@ public abstract class PieceMovesCalculator {
             return false;
         }
         return true;
+    }
+
+    protected boolean isInBounds(ChessPosition position) {
+        return position.getRow()>0 && position.getRow()<9 && position.getColumn()>0 && position.getColumn()<9;
     }
 
     protected boolean isOccupied(ChessPosition position) {
