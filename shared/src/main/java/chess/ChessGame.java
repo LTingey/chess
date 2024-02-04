@@ -50,6 +50,9 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = board.getPiece(startPosition);
+        if (piece == null) {
+            return null;
+        }
         return piece.pieceMoves(board, startPosition);
     }
 
@@ -71,7 +74,7 @@ public class ChessGame {
         }
 
         // check if it is a valid move
-        Collection<ChessMove> validMoves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = validMoves(startPosition);
         boolean isValidMove = false;
         for (ChessMove validMove: validMoves) {
             if (validMove.equals(move)) {
@@ -118,7 +121,42 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-//        throw new RuntimeException("Not implemented");
+        // find the king's position
+        ChessPosition kingPosition = null;
+        for (int i=1; i<9; i++) {
+            for (int j=1; j<9; j++) {
+                ChessPosition position = new ChessPosition(i,j);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null) {
+                    if (piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
+                        kingPosition = position;
+                        break;
+                    }
+                }
+            }
+            if (kingPosition != null) {
+                break;
+            }
+        }
+
+        // look at all of the opposing team's moves and see if any of them can capture the king
+        for (int i=1; i<9; i++) {
+            for (int j=1; j<9; j++) {
+                ChessPosition position = new ChessPosition(i,j);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null) {
+                    if (piece.getTeamColor() != teamColor) {
+                        Collection<ChessMove> pieceMoves = piece.pieceMoves(board, position);
+                        for (ChessMove move: pieceMoves) {
+                            if (move.getEndPosition().equals(kingPosition)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
