@@ -87,14 +87,8 @@ public class ChessGame {
         }
 
         // make the move
-        // check if it is a pawn that needs promoting
         ChessPiece capturedPiece = board.getPiece(endPosition);
-        board.addPiece(startPosition, null);
-        if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
-            ChessPiece.PieceType promotion = move.getPromotionPiece();
-            piece = new ChessPiece(pieceColor, promotion);
-        }
-        board.addPiece(endPosition, piece);
+        tryMove(piece, move);
 
         // check if it leaves the king in danger
         if (isInCheck(pieceColor)) {
@@ -109,6 +103,22 @@ public class ChessGame {
         else {
             setTeamTurn(TeamColor.WHITE);
         }
+    }
+
+    private void tryMove(ChessPiece piece, ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        TeamColor pieceColor = piece.getTeamColor();
+
+        board.addPiece(startPosition, null);
+        // check if it is a pawn that needs promoting
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            ChessPiece.PieceType promotion = move.getPromotionPiece();
+            if (promotion != null) {
+                piece = new ChessPiece(pieceColor, promotion);
+            }
+        }
+        board.addPiece(endPosition, piece);
     }
 
     private void undoMove(ChessMove move, ChessPiece capturedPiece) {
@@ -146,13 +156,16 @@ public class ChessGame {
         }
 
         // look at all of the opposing team's moves and see if any of them can capture the king
+        ChessPosition position;
+        ChessPiece piece;
+        Collection<ChessMove> pieceMoves;
         for (int i=1; i<9; i++) {
             for (int j=1; j<9; j++) {
-                ChessPosition position = new ChessPosition(i,j);
-                ChessPiece piece = board.getPiece(position);
+                position = new ChessPosition(i,j);
+                piece = board.getPiece(position);
                 if (piece != null) {
                     if (piece.getTeamColor() != teamColor) {
-                        Collection<ChessMove> pieceMoves = piece.pieceMoves(board, position);
+                        pieceMoves = piece.pieceMoves(board, position);
                         for (ChessMove move: pieceMoves) {
                             if (move.getEndPosition().equals(kingPosition)) {
                                 return true;
@@ -179,6 +192,25 @@ public class ChessGame {
         // test all the moves to see if any get you out of check
         // one way: clone the board and make a move (simplest, but expensive)
         // another way: implement an undo move (harder)
+        // find each piece on the board of that color
+        ChessPosition position;
+        ChessPiece piece;
+        Collection<ChessMove> pieceMoves;
+        for (int i=1; i<9; i++) {
+            for (int j=1; j<9; j++) {
+                position = new ChessPosition(i,j);
+                piece = board.getPiece(position);
+                if (piece != null) {
+                    if (piece.getTeamColor() == teamColor) {
+                        pieceMoves = piece.pieceMoves(board, position);
+                        // make each move and see if they are still in Check
+                        for (ChessMove move: pieceMoves) {
+
+                        }
+                    }
+                }
+            }
+        }
         return true;
     }
 
