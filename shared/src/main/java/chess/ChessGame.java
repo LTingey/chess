@@ -87,9 +87,15 @@ public class ChessGame {
         }
 
         // make the move
+        // check if it is a pawn that needs promoting
         ChessPiece capturedPiece = board.getPiece(endPosition);
-        board.addPiece(endPosition, piece);
         board.addPiece(startPosition, null);
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            ChessPiece.PieceType promotion = move.getPromotionPiece();
+            piece = new ChessPiece(pieceColor, promotion);
+        }
+        board.addPiece(endPosition, piece);
+
         // check if it leaves the king in danger
         if (isInCheck(pieceColor)) {
             undoMove(move, capturedPiece);
