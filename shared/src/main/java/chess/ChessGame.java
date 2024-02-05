@@ -106,12 +106,6 @@ public class ChessGame {
         ChessPiece capturedPiece = board.getPiece(endPosition);
         tryMove(piece, move);
 
-        // check if it leaves the king in danger
-        if (isInCheck(pieceColor)) {
-            undoMove(move, capturedPiece);
-            throw new InvalidMoveException();
-        }
-
         // change team turn
         if (getTeamTurn() == TeamColor.WHITE) {
             setTeamTurn(TeamColor.BLACK);
@@ -181,7 +175,7 @@ public class ChessGame {
                 piece = board.getPiece(position);
                 if (piece != null) {
                     if (piece.getTeamColor() != teamColor) {
-                        pieceMoves = piece.pieceMoves(board, position);     // misses edges case where opposing team's move leaves them in check
+                        pieceMoves = piece.pieceMoves(board, position);     // misses edge case where opposing team's move leaves them in check
                         for (ChessMove move: pieceMoves) {
                             if (move.getEndPosition().equals(kingPosition)) {
                                 return true;
@@ -231,6 +225,7 @@ public class ChessGame {
                 }
             }
         }
+
         return true;
     }
 
@@ -245,6 +240,7 @@ public class ChessGame {
         if (getTeamTurn() != teamColor) {
             return false;
         }
+
         ChessPosition position;
         ChessPiece piece;
         Collection<ChessMove> pieceMoves;
@@ -262,6 +258,7 @@ public class ChessGame {
                 }
             }
         }
+
         return true;
     }
 
