@@ -53,7 +53,23 @@ public class ChessGame {
         if (piece == null) {
             return null;
         }
-        return piece.pieceMoves(board, startPosition);
+
+        Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+        ChessPosition endPosition;
+
+        // check each move to see if it leaves their king in danger
+        for (ChessMove move: possibleMoves) {
+            endPosition = move.getEndPosition();
+            ChessPiece capturedPiece = board.getPiece(endPosition);
+            tryMove(piece, move);
+            if (!isInCheck(piece.getTeamColor())) {
+                validMoves.add(move);
+            }
+            undoMove(move, capturedPiece);
+        }
+
+        return validMoves;
     }
 
     /**
@@ -73,7 +89,7 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
 
-        // check if it is a valid move
+        // check if it's a valid move
         Collection<ChessMove> validMoves = validMoves(startPosition);
         boolean isValidMove = false;
         for (ChessMove validMove: validMoves) {
@@ -165,7 +181,7 @@ public class ChessGame {
                 piece = board.getPiece(position);
                 if (piece != null) {
                     if (piece.getTeamColor() != teamColor) {
-                        pieceMoves = piece.pieceMoves(board, position);
+                        pieceMoves = piece.pieceMoves(board, position);     // misses edges case where opposing team's move leaves them in check
                         for (ChessMove move: pieceMoves) {
                             if (move.getEndPosition().equals(kingPosition)) {
                                 return true;
@@ -189,10 +205,7 @@ public class ChessGame {
         if (!isInCheck(teamColor)) {
             return false;
         }
-        // test all the moves to see if any get you out of check
-        // one way: clone the board and make a move (simplest, but expensive)
-        // another way: implement an undo move (harder)
-        // find each piece on the board of that color
+
         ChessPosition position;
         ChessPiece piece;
         Collection<ChessMove> pieceMoves;
@@ -203,7 +216,7 @@ public class ChessGame {
                 piece = board.getPiece(position);
                 if (piece != null) {
                     if (piece.getTeamColor() == teamColor) {
-                        pieceMoves = piece.pieceMoves(board, position);
+                        pieceMoves = validMoves(position);
                         // make each move and see if they are still in Check
                         for (ChessMove move: pieceMoves) {
                             endPosition = move.getEndPosition();
@@ -229,7 +242,27 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (getTeamTurn() != teamColor) {
+            return false;
+        }
+        ChessPosition position;
+        ChessPiece piece;
+        Collection<ChessMove> pieceMoves;
+        for (int i=1; i<9; i++) {
+            for (int j=1; j<9; j++) {
+                position = new ChessPosition(i,j);
+                piece = board.getPiece(position);
+                if (piece != null) {
+                    if (piece.getTeamColor() == teamColor) {
+                        pieceMoves = validMoves(position);
+                        if (!pieceMoves.isEmpty()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
