@@ -196,6 +196,7 @@ public class ChessGame {
         ChessPosition position;
         ChessPiece piece;
         Collection<ChessMove> pieceMoves;
+        ChessPosition endPosition;
         for (int i=1; i<9; i++) {
             for (int j=1; j<9; j++) {
                 position = new ChessPosition(i,j);
@@ -205,7 +206,13 @@ public class ChessGame {
                         pieceMoves = piece.pieceMoves(board, position);
                         // make each move and see if they are still in Check
                         for (ChessMove move: pieceMoves) {
-
+                            endPosition = move.getEndPosition();
+                            ChessPiece capturedPiece = board.getPiece(endPosition);
+                            tryMove(piece, move);
+                            if (!isInCheck(teamColor)) {
+                                undoMove(move, capturedPiece);
+                                return false;
+                            }
                         }
                     }
                 }
