@@ -3,17 +3,14 @@ package service;
 import dataAccess.DataAccessException;
 import dataAccess.MemoryAuthDAO;
 import dataAccess.MemoryGameDAO;
-import dataAccess.MemoryUserDAO;
 import model.AuthData;
 import model.GameData;
 import models.CreateGameRequest;
 import models.JoinGameRequest;
-import models.LoginRequest;
 
 import java.util.HashSet;
 
 public class GameService {
-    private MemoryUserDAO userDAO = new MemoryUserDAO();
     private MemoryAuthDAO authDAO = new MemoryAuthDAO();
     private MemoryGameDAO gameDAO = new MemoryGameDAO();
 
@@ -42,8 +39,20 @@ public class GameService {
         if (existingGame == null) {
             throw new DataAccessException("Error: bad request");
         }
-        if (request.playerColor() != null) {
 
+        if (request.playerColor().equals("WHITE")) {
+            if (existingGame.whiteUsername() != null) {
+                throw new DataAccessException("Error: already taken");
+            }
+            GameData updatedGame = new GameData(existingGame.gameID(), userAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game());
+            gameDAO.updateGame(updatedGame);
+        }
+        else if(request.playerColor().equals("BLACK")) {
+            if (existingGame.blackUsername() != null) {
+                throw new DataAccessException("Error: already taken");
+            }
+            GameData updatedGame = new GameData(existingGame.gameID(), existingGame.whiteUsername(), userAuth.username(), existingGame.gameName(), existingGame.game());
+            gameDAO.updateGame(updatedGame);
         }
     }
 }
