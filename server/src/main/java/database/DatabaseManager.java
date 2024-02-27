@@ -4,9 +4,6 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
-import javax.lang.model.type.NullType;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class DatabaseManager {
@@ -14,7 +11,7 @@ public class DatabaseManager {
     HashSet<AuthData> authDatabase = new HashSet<>();
     HashSet<GameData> gameDatabase = new HashSet<>();
 
-    public UserData getUser(String username) {
+    public UserData findUser(String username) {
         for (UserData user : userDatabase) {
             if (user.username().equals(username)) {
                 return user;
@@ -27,13 +24,13 @@ public class DatabaseManager {
         userDatabase.add(newUser);
     }
 
-    public String getAuth(String username) {
+    public AuthData findAuth(String username) {
         for (AuthData authData : authDatabase) {
             if (authData.username().equals(username)) {
-                return authData.authToken();
+                return authData;
             }
         }
-        return "";
+        return null;
     }
 
     public void addAuth(AuthData newAuth) {
@@ -44,7 +41,7 @@ public class DatabaseManager {
         authDatabase.remove(authData);
     }
 
-    public GameData getGame(int gameID) {
+    public GameData findGame(int gameID) {
         for (GameData game : gameDatabase) {
             if (game.gameID() == gameID) {
                 return game;
@@ -55,6 +52,11 @@ public class DatabaseManager {
 
     public void addGame(GameData newGame) {
         gameDatabase.add(newGame);
+    }
+
+
+    public HashSet<GameData> allGames() {
+        return gameDatabase;
     }
 
     public void clearUsers() {
