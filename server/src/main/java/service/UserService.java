@@ -12,6 +12,16 @@ public class UserService {
     private MemoryUserDAO userDAO = new MemoryUserDAO();
     private MemoryAuthDAO authDAO = new MemoryAuthDAO();
 
+    public LoginResult register(UserData user) throws DataAccessException {
+        UserData existingUser = userDAO.getUser(user.username());
+        if (existingUser != null) {
+            throw new DataAccessException("'message': 'Error: already taken'");
+        }
+        userDAO.createUser(user);
+        String authToken = authDAO.createAuth(user.username());
+        return new LoginResult(user.username(), authToken);
+    }
+
     public LoginResult login(LoginRequest request) throws DataAccessException {
         UserData existingUser = userDAO.getUser(request.username());
         if (existingUser == null) {
@@ -30,9 +40,5 @@ public class UserService {
             throw new DataAccessException("'message': 'Error: unauthorized'");
         }
         authDAO.deleteAuth(existingAuth);
-    }
-
-    public LoginResult register(UserData user) throws DataAccessException {
-        return null;
     }
 }
