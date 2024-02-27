@@ -54,6 +54,9 @@ public class DatabaseManager {
         gameDatabase.add(newGame);
     }
 
+    public void removeGame(GameData game) {
+        gameDatabase.remove(game);
+    }
 
     public HashSet<GameData> allGames() {
         return gameDatabase;

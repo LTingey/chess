@@ -5,8 +5,8 @@ import model.AuthData;
 abstract public class AuthDAO {
     static protected DatabaseManager authDatabase = new DatabaseManager();
 
-    abstract protected void createAuth(AuthData newAuth);
-    abstract protected AuthData getAuth(String username);
-    abstract protected void deleteAuth(AuthData authData);
-    abstract protected void clear();
+    abstract public void createAuth(AuthData newAuth);
+    abstract public AuthData getAuth(String username);
+    abstract public void deleteAuth(AuthData authData);
+    abstract public void clear();
 }

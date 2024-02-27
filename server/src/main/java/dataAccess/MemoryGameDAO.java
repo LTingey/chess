@@ -6,28 +6,29 @@ import java.util.HashSet;
 
 public class MemoryGameDAO extends GameDAO{
     @Override
-    protected void createGame(GameData game) {
+    public void createGame(GameData game) {
         gameDatabase.addGame(game);
     }
 
     @Override
-    protected GameData getGame(int gameID) {
+    public GameData getGame(int gameID) {
         return gameDatabase.findGame(gameID);
     }
 
     @Override
-    protected HashSet<GameData> listGames() {
+    public HashSet<GameData> listGames() {
         return gameDatabase.allGames();
     }
 
     @Override
-    protected void updateGame(GameData game) {
+    public void updateGame(GameData game) {
         GameData existingGame = gameDatabase.findGame(game.gameID());
-
+        gameDatabase.removeGame(existingGame);
+        gameDatabase.addGame(game);
     }
 
     @Override
-    protected void clear() {
+    public void clear() {
         gameDatabase.clearGames();
     }
 }

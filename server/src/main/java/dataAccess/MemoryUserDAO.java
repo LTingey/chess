@@ -5,17 +5,17 @@ import model.UserData;
 public class MemoryUserDAO extends UserDAO {
 
     @Override
-    protected void createUser(UserData newUser) {
+    public void createUser(UserData newUser) {
         userDatabase.addUser(newUser);
     }
 
     @Override
-    protected UserData getUser(String username) {
+    public UserData getUser(String username) {
         return userDatabase.findUser(username);
     }
 
     @Override
-    protected void clear() {
+    public void clear() {
         userDatabase.clearUsers();
     }
 }
