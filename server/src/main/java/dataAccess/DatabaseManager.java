@@ -1,4 +1,4 @@
-package database;
+package dataAccess;
 
 import model.AuthData;
 import model.GameData;

@@ -1,6 +1,5 @@
 package dataAccess;
 
-import database.DatabaseManager;
 import model.GameData;
 
 import java.util.HashSet;
@@ -8,9 +7,9 @@ import java.util.HashSet;
 abstract public class GameDAO {
     static protected DatabaseManager gameDatabase = new DatabaseManager();
 
-    abstract protected void createGame(GameData game) throws DataAccessException;
-    abstract protected GameData getGame(int gameID) throws DataAccessException;
-    abstract protected HashSet<GameData> listGames() throws DataAccessException;
-    abstract protected void updateGame(GameData game) throws DataAccessException;
+    abstract protected void createGame(GameData game);
+    abstract protected GameData getGame(int gameID);
+    abstract protected HashSet<GameData> listGames();
+    abstract protected void updateGame(GameData game);
     abstract protected void clear();
 }
