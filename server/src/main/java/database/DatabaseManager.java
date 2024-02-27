@@ -1,64 +1,59 @@
 package database;
 
+import model.AuthData;
+import model.GameData;
+import model.UserData;
+
+import javax.lang.model.type.NullType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class DatabaseManager {
-    HashSet<ArrayList<String>> userDatabase = new HashSet<>();
-    HashMap<String, String> authDatabase = new HashMap<>();
-    HashSet<ArrayList<String>> gameDatabase = new HashSet<>();
+    HashSet<UserData> userDatabase = new HashSet<>();
+    HashSet<AuthData> authDatabase = new HashSet<>();
+    HashSet<GameData> gameDatabase = new HashSet<>();
 
-    public ArrayList<String> getUser(String username) {
-        for (ArrayList<String> user : userDatabase) {
-            if (user.getFirst().equals(username)) {
+    public UserData getUser(String username) {
+        for (UserData user : userDatabase) {
+            if (user.username().equals(username)) {
                 return user;
             }
         }
-        return new ArrayList<>();
+        return null;
     }
 
-    public void addUser(String username, String password, String email) {
-        ArrayList<String> newUser = new ArrayList<>(3);
-        newUser.add(username);
-        newUser.add(password);
-        newUser.add(email);
+    public void addUser(UserData newUser) {
         userDatabase.add(newUser);
     }
 
     public String getAuth(String username) {
-        for (String user : authDatabase.keySet()) {
-            if (user.equals(username)) {
-                return authDatabase.get(user);
+        for (AuthData authData : authDatabase) {
+            if (authData.username().equals(username)) {
+                return authData.authToken();
             }
         }
         return "";
     }
 
-    public void addAuth(String username, String authToken) {
-        authDatabase.put(username, authToken);
+    public void addAuth(AuthData newAuth) {
+        authDatabase.add(newAuth);
     }
 
-    public void removeAuth(String username) {
-        authDatabase.remove(username);
+    public void removeAuth(AuthData authData) {
+        authDatabase.remove(authData);
     }
 
-    public ArrayList<String> getGame(String gameID) {
-        for (ArrayList<String> game : gameDatabase) {
-            if (game.getFirst().equals(gameID)) {
+    public GameData getGame(int gameID) {
+        for (GameData game : gameDatabase) {
+            if (game.gameID() == gameID) {
                 return game;
             }
         }
-        return new ArrayList<>();
+        return null;
     }
 
-    public void addGame(String gameID, String whiteUsername, String blackUsername, String gameName, String game) {
-        ArrayList<String> newGame = new ArrayList<>(5);
-        newGame.add(gameID);
-        newGame.add(whiteUsername);
-        newGame.add(blackUsername);
-        newGame.add(gameName);
-        newGame.add(game);
+    public void addGame(GameData newGame) {
         gameDatabase.add(newGame);
     }
 
