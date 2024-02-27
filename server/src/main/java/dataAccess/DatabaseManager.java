@@ -24,9 +24,9 @@ public class DatabaseManager {
         userDatabase.add(newUser);
     }
 
-    public AuthData findAuth(String username) {
+    public AuthData findAuth(String authToken) {
         for (AuthData authData : authDatabase) {
-            if (authData.username().equals(username)) {
+            if (authData.authToken().equals(authToken)) {
                 return authData;
             }
         }
