@@ -1,17 +1,12 @@
 package service;
 
 import dataAccess.DataAccessException;
-import dataAccess.MemoryAuthDAO;
-import dataAccess.MemoryUserDAO;
 import model.AuthData;
 import model.UserData;
 import models.LoginRequest;
 import models.LoginResult;
 
-public class UserService {
-    private MemoryUserDAO userDAO = new MemoryUserDAO();
-    private MemoryAuthDAO authDAO = new MemoryAuthDAO();
-
+public class UserService extends Service {
     public LoginResult register(UserData user) throws DataAccessException {
         UserData existingUser = userDAO.getUser(user.username());
         if (existingUser != null) {
@@ -35,10 +30,8 @@ public class UserService {
     }
 
     public void logout(String authToken) throws DataAccessException {
+        checkAuthorization(authToken);
         AuthData existingAuth = authDAO.getAuth(authToken);
-        if (existingAuth == null) {
-            throw new DataAccessException("Error: unauthorized");
-        }
         authDAO.deleteAuth(existingAuth);
     }
 }
