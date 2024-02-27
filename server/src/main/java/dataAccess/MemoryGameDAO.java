@@ -1,13 +1,19 @@
 package dataAccess;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.HashSet;
 
 public class MemoryGameDAO extends GameDAO{
+    static private int nextID = 0;
+
     @Override
-    public void createGame(GameData game) {
+    public int createGame(String gameName) {
+        GameData game = new GameData(nextID, null, null, gameName, new ChessGame());
         gameDatabase.addGame(game);
+        nextID = nextID + 1;
+        return game.gameID();
     }
 
     @Override

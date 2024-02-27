@@ -25,10 +25,10 @@ public class UserService {
     public LoginResult login(LoginRequest request) throws DataAccessException {
         UserData existingUser = userDAO.getUser(request.username());
         if (existingUser == null) {
-            throw new DataAccessException("'message': 'Error: unauthorized'");
+            throw new DataAccessException("Error: unauthorized");
         }
         if (!existingUser.password().equals(request.password())) {
-            throw new DataAccessException("'message': 'Error: unauthorized'");
+            throw new DataAccessException("Error: unauthorized");
         }
         String authToken = authDAO.createAuth(request.username());
         return new LoginResult(request.username(), authToken);
@@ -37,7 +37,7 @@ public class UserService {
     public void logout(String authToken) throws DataAccessException {
         AuthData existingAuth = authDAO.getAuth(authToken);
         if (existingAuth == null) {
-            throw new DataAccessException("'message': 'Error: unauthorized'");
+            throw new DataAccessException("Error: unauthorized");
         }
         authDAO.deleteAuth(existingAuth);
     }
