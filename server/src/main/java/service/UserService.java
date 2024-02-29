@@ -10,7 +10,7 @@ public class UserService extends Service {
     public LoginResult register(UserData user) throws DataAccessException {
         UserData existingUser = userDAO.getUser(user.username());
         if (existingUser != null) {
-            throw new DataAccessException("'message': 'Error: already taken'");
+            throw new DataAccessException("Error: already taken");
         }
         userDAO.createUser(user);
         String authToken = authDAO.createAuth(user.username());
