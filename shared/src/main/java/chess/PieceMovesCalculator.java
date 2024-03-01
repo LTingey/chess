@@ -66,30 +66,6 @@ public abstract class PieceMovesCalculator {
                 break;
             }
         }
-        // up left
-        for (int i = currentPosition.getRow()+1, j = currentPosition.getColumn()-1; i<9 && j>0; i++, j--) {
-            if (diagonalMovesHelper(i,j)) {
-                break;
-            }
-        }
-        // down left
-        for (int i = currentPosition.getRow()-1, j = currentPosition.getColumn()-1; i>0 && j>0; i--, j--) {
-            if (diagonalMovesHelper(i,j)) {
-                break;
-            }
-        }
-        // up right
-        for (int i = currentPosition.getRow()+1, j = currentPosition.getColumn()+1; i<9 && j<9; i++, j++) {
-            if (diagonalMovesHelper(i,j)) {
-                break;
-            }
-        }
-        // down right
-        for (int i = currentPosition.getRow()-1, j = currentPosition.getColumn()+1; i>0 && j<9; i--, j++) {
-            if (diagonalMovesHelper(i,j)) {
-                break;
-            }
-        }
     }
 
     protected void bishopMoves() {

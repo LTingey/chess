@@ -74,13 +74,6 @@ public class ChessBoard {
         board[6][5] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         board[6][6] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         board[6][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
-
-        // middle spaces
-//        for (int i=2; i<6; i++) {
-//            for (int j=0; j<8; j++) {
-//                board[i][j] = null;
-//            }
-//        }
     }
 
     @Override
