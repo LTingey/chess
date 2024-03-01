@@ -23,6 +23,6 @@ public class ClearHandler extends Handler {
         }
 
         res.type("application/json");
-        return new Gson().toJson(resBody);
+        return serializer.toJson(resBody);
     }
 }
