@@ -16,7 +16,7 @@ public class GameHandler extends Handler {
     static GameService gameService = new GameService();
     public static Object listGames(Request req, Response res) {
         String reqHeader = req.headers("authorization");
-        Map<String, Object> resBody;
+        Map<String, Object> resBody = null;
 
         try {
             HashSet<GameData> listRes = gameService.listGames(reqHeader);
@@ -24,13 +24,7 @@ public class GameHandler extends Handler {
             res.status(200);
         }
         catch (DataAccessException e) {
-            String message = e.getMessage();
-            resBody = Map.of("message", message);
-            if (message.equals("Error: unauthorized")) {
-                res.status(401);
-            } else {
-                res.status(500);
-            }
+            catchUnauthMess(res, e);
         }
 
         res.type("application/json");
