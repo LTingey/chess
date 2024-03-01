@@ -1,20 +1,12 @@
 import dataAccess.DataAccessException;
-import dataAccess.MemoryAuthDAO;
-import dataAccess.MemoryGameDAO;
-import dataAccess.MemoryUserDAO;
-import model.GameData;
 import model.UserData;
 import models.CreateGameRequest;
 import models.JoinGameRequest;
 import models.LoginRequest;
-import models.LoginResult;
 import org.junit.jupiter.api.*;
-import passoffTests.testClasses.TestException;
 import service.ClearService;
 import service.GameService;
 import service.UserService;
-
-import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,7 +42,7 @@ public class serviceTests {
     }
 
     @Test
-    public void nullPassword() throws DataAccessException {
+    public void nullPassword() {
         UserData user = new UserData("Peach", null, "whatisan@email.com");
         DataAccessException exception = assertThrows(DataAccessException.class, () -> userService.register(user));
         assertEquals("Error: bad request", exception.getMessage());
@@ -63,7 +55,7 @@ public class serviceTests {
     }
 
     @Test
-    public void wrongPassword() throws DataAccessException {
+    public void wrongPassword() {
         LoginRequest wrongLogin = new LoginRequest("Spencer", "CSgenius");
         DataAccessException exception = assertThrows(DataAccessException.class, () -> userService.login(wrongLogin));
         assertEquals("Error: unauthorized", exception.getMessage());
@@ -87,7 +79,7 @@ public class serviceTests {
     }
 
     @Test
-    public void unauthorizedListGames() throws DataAccessException {
+    public void unauthorizedListGames() {
         String badToken = "8008135";
         DataAccessException exception = assertThrows(DataAccessException.class, () -> gameService.listGames(badToken));
         assertEquals("Error: unauthorized", exception.getMessage());
@@ -100,7 +92,7 @@ public class serviceTests {
     }
 
     @Test
-    public void unauthorizedCreateGame() throws DataAccessException {
+    public void unauthorizedCreateGame() {
         CreateGameRequest badGame = new CreateGameRequest("abc123", "epicgame");
         DataAccessException exception = assertThrows(DataAccessException.class, () -> gameService.createGame(badGame));
         assertEquals("Error: unauthorized", exception.getMessage());
@@ -125,7 +117,7 @@ public class serviceTests {
     }
 
     @Test
-    public void testClear() throws DataAccessException {
+    public void testClear() {
         clearService.clear();
     }
 }
