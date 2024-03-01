@@ -5,6 +5,7 @@ import dataAccess.DataAccessException;
 import model.GameData;
 import models.CreateGameRequest;
 import models.JoinGameRequest;
+import models.JoinRequestBody;
 import service.GameService;
 import spark.*;
 
@@ -33,7 +34,7 @@ public class GameHandler extends Handler {
         }
 
         res.type("application/json");
-        return new Gson().toJson(resBody);
+        return serializer.toJson(resBody);
     }
 
     public static Object createGame(Request req, Response res) {
@@ -63,14 +64,14 @@ public class GameHandler extends Handler {
         }
 
         res.type("application/json");
-        return new Gson().toJson(resBody);
+        return serializer.toJson(resBody);
     }
 
     public static Object joinGame(Request req, Response res) {
         String reqHeader = req.headers("authorization");
-        var reqBody = getBody(req, Map.class);
+        var reqBody = getBody(req, JoinRequestBody.class);
         Object resBody;
-        JoinGameRequest gameReq = new JoinGameRequest(reqHeader, reqBody.get("playerColor").toString(), Integer.parseInt(reqBody.get("gameID").toString()));
+        JoinGameRequest gameReq = new JoinGameRequest(reqHeader, reqBody.playerColor(), reqBody.gameID());
 
         try {
             gameService.joinGame(gameReq);
@@ -96,6 +97,6 @@ public class GameHandler extends Handler {
         }
 
         res.type("application/json");
-        return new Gson().toJson(resBody);
+        return serializer.toJson(resBody);
     }
 }
