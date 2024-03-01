@@ -43,6 +43,7 @@ public class GameHandler extends Handler {
         Map<String, Object> resBody;
 
         try {
+            // check if game name was provided so we can use toString
             if (reqBody.get("gameName") == null) {
                 throw new DataAccessException("Error: bad request");
             }

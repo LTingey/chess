@@ -22,20 +22,21 @@ public class GameService extends Service {
     public void joinGame(JoinGameRequest request) throws DataAccessException {
         checkAuthorization(request.authToken());
         GameData existingGame = gameDAO.getGame(request.gameID());
+        // check if the game exists
         if (existingGame == null) {
             throw new DataAccessException("Error: bad request");
         }
 
         AuthData userAuth = authDAO.getAuth(request.authToken());
         if (request.playerColor() != null) {
+            // if a color is specified, add the caller as the requested color to the game
             if (request.playerColor().equals("WHITE")) {
                 if (existingGame.whiteUsername() != null) {
                     throw new DataAccessException("Error: already taken");
                 }
                 GameData updatedGame = new GameData(existingGame.gameID(), userAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game());
                 gameDAO.updateGame(updatedGame);
-            }
-            else if(request.playerColor().equals("BLACK")) {
+            } else {
                 if (existingGame.blackUsername() != null) {
                     throw new DataAccessException("Error: already taken");
                 }

@@ -6,7 +6,7 @@ import model.GameData;
 import java.util.HashSet;
 
 public class MemoryGameDAO extends GameDAO{
-    static private int nextID = 0;
+    static private int nextID = 0;              // counter that for unique gameID's
 
     @Override
     public int createGame(String gameName) {

@@ -12,6 +12,7 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
+        // endpoints
         Spark.delete("/db", ClearHandler::clear);
         Spark.post("/user", UserHandler::register);
         Spark.post("/session", UserHandler::login);
