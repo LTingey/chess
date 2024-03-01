@@ -51,9 +51,8 @@ public class UserHandler extends Handler {
             res.status(200);
         }
         catch (DataAccessException e) {
-            String message = e.getMessage();
-            resBody = Map.of("message", message);
-            if (message.equals("Error: unauthorized")) {
+            resBody = Map.of("message", e.getMessage());
+            if (e.getMessage().equals("Error: unauthorized")) {
                 res.status(401);
             } else {
                 res.status(500);
