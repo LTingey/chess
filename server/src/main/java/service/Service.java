@@ -11,6 +11,9 @@ public class Service {
     protected MemoryAuthDAO authDAO = new MemoryAuthDAO();
     protected MemoryGameDAO gameDAO = new MemoryGameDAO();
     protected void checkAuthorization(String authToken) throws DataAccessException {
+        if (authToken == null) {
+            throw new DataAccessException("Error: bad request");
+        }
         AuthData existingAuth = authDAO.getAuth(authToken);
         if (existingAuth == null) {
             throw new DataAccessException("Error: unauthorized");

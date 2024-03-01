@@ -27,19 +27,22 @@ public class GameService extends Service {
         }
 
         AuthData userAuth = authDAO.getAuth(request.authToken());
-        if (request.playerColor().equals("WHITE")) {
-            if (existingGame.whiteUsername() != null) {
-                throw new DataAccessException("Error: already taken");
+        if (request.playerColor() != null) {
+            if (request.playerColor().equals("WHITE")) {
+                if (existingGame.whiteUsername() != null) {
+                    throw new DataAccessException("Error: already taken");
+                }
+                GameData updatedGame = new GameData(existingGame.gameID(), userAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game());
+                gameDAO.updateGame(updatedGame);
             }
-            GameData updatedGame = new GameData(existingGame.gameID(), userAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game());
-            gameDAO.updateGame(updatedGame);
-        }
-        else if(request.playerColor().equals("BLACK")) {
-            if (existingGame.blackUsername() != null) {
-                throw new DataAccessException("Error: already taken");
+            else if(request.playerColor().equals("BLACK")) {
+                if (existingGame.blackUsername() != null) {
+                    throw new DataAccessException("Error: already taken");
+                }
+                GameData updatedGame = new GameData(existingGame.gameID(), existingGame.whiteUsername(), userAuth.username(), existingGame.gameName(), existingGame.game());
+                gameDAO.updateGame(updatedGame);
             }
-            GameData updatedGame = new GameData(existingGame.gameID(), existingGame.whiteUsername(), userAuth.username(), existingGame.gameName(), existingGame.game());
-            gameDAO.updateGame(updatedGame);
         }
+
     }
 }

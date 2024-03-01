@@ -8,10 +8,15 @@ import models.LoginResult;
 
 public class UserService extends Service {
     public LoginResult register(UserData user) throws DataAccessException {
+        if (user.password() == null) {
+            throw new DataAccessException("Error: bad request");
+        }
+
         UserData existingUser = userDAO.getUser(user.username());
         if (existingUser != null) {
             throw new DataAccessException("Error: already taken");
         }
+
         userDAO.createUser(user);
         String authToken = authDAO.createAuth(user.username());
         return new LoginResult(user.username(), authToken);

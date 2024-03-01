@@ -37,13 +37,16 @@ public class GameHandler extends Handler {
         return serializer.toJson(resBody);
     }
 
-    public static Object createGame(Request req, Response res) {
+    public static Object createGame(Request req, Response res) throws DataAccessException {
         String reqHeader = req.headers("authorization");
         var reqBody = getBody(req, Map.class);
         Map<String, Object> resBody;
-        CreateGameRequest gameRequest = new CreateGameRequest(reqHeader, reqBody.get("gameName").toString());
 
         try {
+            if (reqBody.get("gameName") == null) {
+                throw new DataAccessException("Error: bad request");
+            }
+            CreateGameRequest gameRequest = new CreateGameRequest(reqHeader, reqBody.get("gameName").toString());
             int gameID = gameService.createGame(gameRequest);
             resBody = Map.of("gameID", gameID);
             res.status(200);
