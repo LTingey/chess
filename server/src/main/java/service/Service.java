@@ -1,9 +1,9 @@
 package service;
 
 import dataAccess.DataAccessException;
-import dataAccess.MemoryAuthDAO;
-import dataAccess.MemoryGameDAO;
-import dataAccess.MemoryUserDAO;
+import dataAccess.memory.MemoryAuthDAO;
+import dataAccess.memory.MemoryGameDAO;
+import dataAccess.memory.MemoryUserDAO;
 import model.AuthData;
 
 public class Service {
