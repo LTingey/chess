@@ -57,11 +57,10 @@ public class DatabaseManager {
         try (var conn = DatabaseManager.getConnection()) {
             var statement = """
                     CREATE TABLE IF NOT EXISTS users (
-                        id INT NOT NULL AUTO_INCREMENT,
                         username VARCHAR(255) NOT NULL,
                         password VARCHAR(255) NOT NULL,
                         email VARCHAR(255) NOT NULL,
-                        PRIMARY KEY (id)
+                        PRIMARY KEY (username)
                     )""";
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
@@ -75,10 +74,9 @@ public class DatabaseManager {
         try (var conn = DatabaseManager.getConnection()) {
             var statement = """
                     CREATE TABLE IF NOT EXISTS auths (
-                        id INT NOT NULL AUTO_INCREMENT,
                         username VARCHAR(255) NOT NULL,
                         authToken VARCHAR(255) NOT NULL,
-                        PRIMARY KEY (id)
+                        PRIMARY KEY (username)
                     )""";
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();

@@ -16,7 +16,7 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
         var encoder = new BCryptPasswordEncoder();
         var hashedPassword = encoder.encode(newUser.password());
         var statement = "INSERT INTO users (username, password, email) VALUES(?, ?, ?)";
-        var id = executeUpdate(statement, newUser.username(), hashedPassword, newUser.email());
+        executeUpdate(statement, newUser.username(), hashedPassword, newUser.email());
     }
 
     public UserData getUser(String usersName) throws DataAccessException {
