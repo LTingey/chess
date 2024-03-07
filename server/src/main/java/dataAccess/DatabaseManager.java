@@ -91,7 +91,7 @@ public class DatabaseManager {
             var statement = """
                     CREATE TABLE IF NOT EXISTS games (
                         id INT NOT NULL AUTO_INCREMENT,
-                        whitUsername VARCHAR(255),
+                        whiteUsername VARCHAR(255),
                         blackUsername VARCHAR(255),
                         gameName VARCHAR(255) NOT NULL,
                         game longtext NOT NULL
