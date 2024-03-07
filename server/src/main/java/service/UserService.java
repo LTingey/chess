@@ -17,7 +17,7 @@ public class UserService extends Service {
         if (existingUser != null) {
             throw new DataAccessException("Error: already taken");
         }
-        userDAO.createUser(user);
+        userDAO.addUser(user);
         String authToken = authDAO.createAuth(user.username());
         return new LoginResult(user.username(), authToken);
     }

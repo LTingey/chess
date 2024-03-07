@@ -7,7 +7,7 @@ import model.UserData;
 public class MemoryUserDAO implements UserDAO {
     private static MemoryDatabase userDatabase = new MemoryDatabase();
 
-    public void createUser(UserData newUser) {
+    public void addUser(UserData newUser) {
         userDatabase.addUser(newUser);
     }
 

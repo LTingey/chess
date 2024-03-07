@@ -7,33 +7,16 @@ import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.SQLException;
-import java.sql.Statement;
 
-public class SQLUserDAO implements UserDAO {
+public class SQLUserDAO extends SQLDAO implements UserDAO {
     public SQLUserDAO() throws DataAccessException {
         DatabaseManager.configureDatabase();
     }
-    public void createUser(UserData newUser) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            var statement = "INSERT INTO users (username, password, email) VALUES(?, ?, ?)";
-            try (var preparedStatement = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
-                var encoder = new BCryptPasswordEncoder();
-                var hashedPassword = encoder.encode(newUser.password());
-                preparedStatement.setString(1, newUser.username());
-                preparedStatement.setString(2, hashedPassword);
-                preparedStatement.setString(3, newUser.email());
-
-                preparedStatement.executeUpdate();
-
-                var idIter = preparedStatement.getGeneratedKeys();
-                var id = 0;
-                if (idIter.next()) {
-                    id = idIter.getInt(1);
-                }
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
-        }
+    public void addUser(UserData newUser) throws DataAccessException {
+        var encoder = new BCryptPasswordEncoder();
+        var hashedPassword = encoder.encode(newUser.password());
+        var statement = "INSERT INTO users (username, password, email) VALUES(?, ?, ?)";
+        var id = executeUpdate(statement, newUser.username(), hashedPassword, newUser.email());
     }
 
     public UserData getUser(String usersName) throws DataAccessException {
