@@ -5,6 +5,7 @@ import model.AuthData;
 import model.UserData;
 import models.LoginRequest;
 import models.LoginResult;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserService extends Service {
     public LoginResult register(UserData user) throws DataAccessException {
@@ -29,7 +30,9 @@ public class UserService extends Service {
             throw new DataAccessException("Error: unauthorized");
         }
         // check that the password matches
-        if (!existingUser.password().equals(request.password())) {
+        var encoder = new BCryptPasswordEncoder();
+        var hashedPassword = encoder.encode(request.password());
+        if (!existingUser.password().equals(hashedPassword)) {
             throw new DataAccessException("Error: unauthorized");
         }
         String authToken = authDAO.createAuth(request.username());
