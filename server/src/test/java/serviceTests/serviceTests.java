@@ -32,9 +32,6 @@ public class serviceTests {
         String user3Auth = userService.register(user3).authToken();
 
         userService.logout(user2Auth);
-
-        CreateGameRequest game1 = new CreateGameRequest(user2Auth, "game1");
-        CreateGameRequest game2 = new CreateGameRequest(user3Auth, "game2");
     }
 
     @Test
@@ -113,8 +110,9 @@ public class serviceTests {
         CreateGameRequest game = new CreateGameRequest(authToken, "Checkers");
         int id = gameService.createGame(game);
         JoinGameRequest request = new JoinGameRequest(authToken, "WHITE", id);
-        gameService.joinGame(request);
-        DataAccessException exception = assertThrows(DataAccessException.class, () -> gameService.joinGame(request));
+        int newID = gameService.joinGame(request);
+        JoinGameRequest newRequest = new JoinGameRequest(authToken, "WHITE", newID);
+        DataAccessException exception = assertThrows(DataAccessException.class, () -> gameService.joinGame(newRequest));
         assertEquals("Error: already taken", exception.getMessage());
     }
 

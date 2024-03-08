@@ -2,10 +2,7 @@ package dataAccess.sql;
 
 import dataAccess.DataAccessException;
 import dataAccess.DatabaseManager;
-import model.UserData;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLDAO {

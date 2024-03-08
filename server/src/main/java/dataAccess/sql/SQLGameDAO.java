@@ -25,7 +25,10 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
             try (PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.setInt(1, gameID);
                 try (ResultSet result = preparedStatement.executeQuery()) {
-                    return readGame(result);
+                    if (result.next()) {
+                        return readGame(result);
+                    }
+                    return null;
                 }
             }
         } catch (SQLException e) {
@@ -50,10 +53,11 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
         return games;
     }
 
-    public void updateGame(GameData game) throws DataAccessException {
+    public int updateGame(GameData game) throws DataAccessException {
         var statement = "DELETE FROM games WHERE id=?";
         executeUpdate(statement, game.gameID());
-        addGame(game.gameName(), game.game());
+        int newID = addGame(game.gameName(), game.game());
+        return newID;
     }
 
     public void clear() throws DataAccessException {
