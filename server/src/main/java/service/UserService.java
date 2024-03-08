@@ -32,7 +32,7 @@ public class UserService extends Service {
         // check that the password matches
         var encoder = new BCryptPasswordEncoder();
         var hashedPassword = encoder.encode(request.password());
-        if (!existingUser.password().equals(hashedPassword)) {
+        if (!existingUser.password().matches(hashedPassword)) {
             throw new DataAccessException("Error: unauthorized");
         }
         String authToken = authDAO.createAuth(request.username());

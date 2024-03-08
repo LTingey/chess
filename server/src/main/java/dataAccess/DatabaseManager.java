@@ -25,6 +25,8 @@ public class DatabaseManager {
                 var host = props.getProperty("db.host");
                 var port = Integer.parseInt(props.getProperty("db.port"));
                 connectionUrl = String.format("jdbc:mysql://%s:%d", host, port);
+
+                configureDatabase();
             }
         } catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties. " + ex.getMessage());
@@ -34,7 +36,7 @@ public class DatabaseManager {
     /**
      * Creates the database and tables if they do not already exist.
      */
-    static {
+    private static void configureDatabase() throws DataAccessException {
         try {
             DatabaseManager.createDatabase();
             DatabaseManager.createUserTable();
@@ -98,7 +100,7 @@ public class DatabaseManager {
                         whiteUsername VARCHAR(255),
                         blackUsername VARCHAR(255),
                         gameName VARCHAR(255) NOT NULL,
-                        game longtext NOT NULL
+                        game longtext NOT NULL,
                         PRIMARY KEY (id)
                     )""";
             try (var preparedStatement = conn.prepareStatement(statement)) {

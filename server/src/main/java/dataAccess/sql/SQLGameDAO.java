@@ -21,14 +21,16 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     public GameData getGame(int gameID) throws DataAccessException {
         String statement = "SELECT id, whiteUsername, blackUsername, gameName, game FROM games WHERE id=?";
-        try (ResultSet result = getDataByID(statement, gameID)) {
-            if (result.next()) {
-                return readGame(result);
+        try (var conn = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setInt(1, gameID);
+                try (ResultSet result = preparedStatement.executeQuery()) {
+                    return readGame(result);
+                }
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
-        return null;
     }
 
     public HashSet<GameData> listGames() throws DataAccessException {

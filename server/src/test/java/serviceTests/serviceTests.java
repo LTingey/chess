@@ -1,3 +1,5 @@
+package serviceTests;
+
 import dataAccess.DataAccessException;
 import model.UserData;
 import models.CreateGameRequest;
@@ -117,7 +119,7 @@ public class serviceTests {
     }
 
     @Test
-    public void testClear() {
+    public void testClear() throws DataAccessException {
         clearService.clear();
     }
 }

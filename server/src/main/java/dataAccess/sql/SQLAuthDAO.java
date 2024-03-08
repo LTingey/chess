@@ -4,7 +4,9 @@ import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.DatabaseManager;
 import model.AuthData;
+import model.UserData;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -18,18 +20,23 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
         return authToken;
     }
 
-    public AuthData getAuth(String usersName) throws DataAccessException {
-        String statement = "SELECT username, authToken FROM auths WHERE username=?";
-        try (ResultSet result = getDataByUsername(statement, usersName)) {
-            if (result.next()) {
-                var username = result.getString("username");
-                var authToken = result.getString("authToken");
-                return new AuthData(username, authToken);
+    public AuthData getAuth(String authToken) throws DataAccessException {
+        String statement = "SELECT username, authToken FROM auths WHERE authToken=?";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, authToken);
+                try (ResultSet result = preparedStatement.executeQuery()) {
+                    if (result.next()) {
+                        var username = result.getString("username");
+                        var token = result.getString("authToken");
+                        return new AuthData(username, authToken);
+                    }
+                    return null;
+                }
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
-        return null;
     }
 
     public void deleteAuth(AuthData authData) throws DataAccessException {
