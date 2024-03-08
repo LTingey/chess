@@ -32,13 +32,17 @@ public class DatabaseManager {
     }
 
     /**
-     * Creates the database if it does not already exist.
+     * Creates the database and tables if they do not already exist.
      */
-    public static void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        DatabaseManager.createUserTable();
-        DatabaseManager.createAuthTable();
-        DatabaseManager.createGameTable();
+    static {
+        try {
+            DatabaseManager.createDatabase();
+            DatabaseManager.createUserTable();
+            DatabaseManager.createAuthTable();
+            DatabaseManager.createGameTable();
+        } catch (DataAccessException e) {
+            throw new RuntimeException("unable to configure database. " + e.getMessage());
+        }
     }
 
     static void createDatabase() throws DataAccessException {

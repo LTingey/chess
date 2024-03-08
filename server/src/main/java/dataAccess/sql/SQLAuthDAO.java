@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 public class SQLAuthDAO extends SQLDAO implements AuthDAO {
-    public SQLAuthDAO() throws DataAccessException {
-        DatabaseManager.configureDatabase();
-    }
 
     public String createAuth(String username) throws DataAccessException{
         var statement = "INSERT INTO auths (username, authToken) VALUES(?, ?)";

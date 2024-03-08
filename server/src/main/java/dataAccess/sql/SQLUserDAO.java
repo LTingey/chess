@@ -10,9 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLUserDAO extends SQLDAO implements UserDAO {
-    public SQLUserDAO() throws DataAccessException {
-        DatabaseManager.configureDatabase();
-    }
     public void addUser(UserData newUser) throws DataAccessException {
         var encoder = new BCryptPasswordEncoder();
         String hashedPassword = encoder.encode(newUser.password());

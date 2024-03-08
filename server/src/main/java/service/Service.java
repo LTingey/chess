@@ -1,15 +1,15 @@
 package service;
 
 import dataAccess.DataAccessException;
-import dataAccess.memory.MemoryAuthDAO;
-import dataAccess.memory.MemoryGameDAO;
-import dataAccess.memory.MemoryUserDAO;
+import dataAccess.sql.SQLAuthDAO;
+import dataAccess.sql.SQLGameDAO;
+import dataAccess.sql.SQLUserDAO;
 import model.AuthData;
 
 public class Service {
-    protected MemoryUserDAO userDAO = new MemoryUserDAO();
-    protected MemoryAuthDAO authDAO = new MemoryAuthDAO();
-    protected MemoryGameDAO gameDAO = new MemoryGameDAO();
+    protected SQLUserDAO userDAO = new SQLUserDAO();
+    protected SQLAuthDAO authDAO = new SQLAuthDAO();
+    protected SQLGameDAO gameDAO = new SQLGameDAO();
     protected void checkAuthorization(String authToken) throws DataAccessException {
         if (authToken == null) {
             throw new DataAccessException("Error: bad request");

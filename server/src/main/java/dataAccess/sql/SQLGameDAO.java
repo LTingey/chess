@@ -14,9 +14,6 @@ import java.sql.Statement;
 import java.util.HashSet;
 
 public class SQLGameDAO extends SQLDAO implements GameDAO {
-    public SQLGameDAO() throws DataAccessException {
-        DatabaseManager.configureDatabase();
-    }
 
     public int createGame(String gameName) throws DataAccessException {
         return addGame(gameName, new ChessGame());
