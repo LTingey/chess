@@ -23,7 +23,7 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
 
     public AuthData getAuth(String usersName) throws DataAccessException {
         String statement = "SELECT username, authToken FROM auths WHERE username=?";
-        try (ResultSet result = getData(statement, usersName)) {
+        try (ResultSet result = getDataByUsername(statement, usersName)) {
             if (result.next()) {
                 var username = result.getString("username");
                 var authToken = result.getString("authToken");

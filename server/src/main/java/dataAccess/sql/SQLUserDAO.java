@@ -6,7 +6,6 @@ import dataAccess.UserDAO;
 import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -23,7 +22,7 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
 
     public UserData getUser(String usersName) throws DataAccessException {
         String statement = "SELECT username, password, email FROM users WHERE username=?";
-        try (ResultSet result = getData(statement, usersName)) {
+        try (ResultSet result = getDataByUsername(statement, usersName)) {
             if (result.next()) {
                 var username = result.getString("username");
                 var password = result.getString("password");
