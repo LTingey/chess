@@ -25,11 +25,10 @@ public class MemoryGameDAO implements GameDAO {
         return gameDatabase.allGames();
     }
 
-    public int updateGame(GameData game) {
+    public void updateGame(GameData game) {
         GameData existingGame = gameDatabase.findGame(game.gameID());
         gameDatabase.removeGame(existingGame);
         gameDatabase.addGame(game);
-        return game.gameID();
     }
 
     public void clear() {

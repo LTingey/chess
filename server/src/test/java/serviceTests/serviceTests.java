@@ -110,9 +110,8 @@ public class serviceTests {
         CreateGameRequest game = new CreateGameRequest(authToken, "Checkers");
         int id = gameService.createGame(game);
         JoinGameRequest request = new JoinGameRequest(authToken, "WHITE", id);
-        int newID = gameService.joinGame(request);
-        JoinGameRequest newRequest = new JoinGameRequest(authToken, "WHITE", newID);
-        DataAccessException exception = assertThrows(DataAccessException.class, () -> gameService.joinGame(newRequest));
+        gameService.joinGame(request);
+        DataAccessException exception = assertThrows(DataAccessException.class, () -> gameService.joinGame(request));
         assertEquals("Error: already taken", exception.getMessage());
     }
 
