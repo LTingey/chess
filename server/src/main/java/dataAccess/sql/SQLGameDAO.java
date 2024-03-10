@@ -1,5 +1,6 @@
 package dataAccess.sql;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
@@ -16,7 +17,11 @@ import java.util.HashSet;
 public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     public int createGame(String gameName) throws DataAccessException {
-        return addGame(gameName, new ChessGame());
+        ChessGame game = new ChessGame();
+        ChessBoard board = new ChessBoard();
+        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setBoard(board);
+        return addGame(gameName, game);
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
@@ -55,7 +60,8 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     public void updateGame(GameData game) throws DataAccessException {
         var statement = "UPDATE games SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE id=?";
-        executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game(), game.gameID());
+        String jsonGame = new Gson().toJson(game.game());
+        executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame, game.gameID());
     }
 
     public void clear() throws DataAccessException {

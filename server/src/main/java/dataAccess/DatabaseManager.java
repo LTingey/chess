@@ -100,7 +100,7 @@ public class DatabaseManager {
                         whiteUsername VARCHAR(255),
                         blackUsername VARCHAR(255),
                         gameName VARCHAR(255) NOT NULL,
-                        game longtext NOT NULL,
+                        game JSON NOT NULL,
                         PRIMARY KEY (id)
                     )""";
             try (var preparedStatement = conn.prepareStatement(statement)) {
