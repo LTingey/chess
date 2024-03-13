@@ -40,8 +40,8 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     }
 
     public void deleteAuth(AuthData authData) throws DataAccessException {
-        String statement = "DELETE FROM auths WHERE username=?";
-        executeUpdate(statement, authData.username());
+        String statement = "DELETE FROM auths WHERE authToken=?";
+        executeUpdate(statement, authData.authToken());
     }
 
     public void clear() throws DataAccessException {
