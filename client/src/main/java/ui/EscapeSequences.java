@@ -44,22 +44,20 @@ public class EscapeSequences {
     public static final String SET_BG_COLOR_YELLOW = SET_BG_COLOR + "226m";
     public static final String SET_BG_COLOR_BLUE = SET_BG_COLOR + "12m";
     public static final String SET_BG_COLOR_MAGENTA = SET_BG_COLOR + "5m";
+    public static final String SET_BG_COLOR_BROWN = "\033[48;2;139;69;19m";
+    public static final String SET_BG_COLOR_TAN = "\033[48;2;210;180;140m";
     public static final String SET_BG_COLOR_WHITE = SET_BG_COLOR + "15m";
     public static final String RESET_BG_COLOR = SET_BG_COLOR + "0m";
 
-    public static final String WHITE_KING = " ♔ ";
-    public static final String WHITE_QUEEN = " ♕ ";
-    public static final String WHITE_BISHOP = " ♗ ";
-    public static final String WHITE_KNIGHT = " ♘ ";
-    public static final String WHITE_ROOK = " ♖ ";
-    public static final String WHITE_PAWN = " ♙ ";
-    public static final String BLACK_KING = " ♚ ";
-    public static final String BLACK_QUEEN = " ♛ ";
-    public static final String BLACK_BISHOP = " ♝ ";
-    public static final String BLACK_KNIGHT = " ♞ ";
-    public static final String BLACK_ROOK = " ♜ ";
-    public static final String BLACK_PAWN = " ♟ ";
-    public static final String EMPTY = " \u2003 ";
+    public static final String KING = " ♚ ";
+    public static final String QUEEN = " ♛ ";
+    public static final String BISHOP = " ♝ ";
+    public static final String KNIGHT = " ♞ ";
+    public static final String ROOK = " ♜ ";
+    public static final String PAWN = " ♟ ";
+    public static final String EM_SPACE = " \u2003 ";
+    public static final String EN_SPACE = "\u2002 ";
+    public static final String SIXTH_EM_SPACE = "\u2006 ";
 
     public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
 }
