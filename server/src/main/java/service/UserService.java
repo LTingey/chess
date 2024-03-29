@@ -3,8 +3,8 @@ package service;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
-import models.LoginRequest;
-import models.LoginResult;
+import model.LoginRequest;
+import model.LoginResult;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserService extends Service {

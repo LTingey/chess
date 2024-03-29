@@ -1,4 +1,4 @@
-package models;
+package model;
 
 public record ExceptionRequest(String message) {
 }

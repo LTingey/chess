@@ -2,9 +2,9 @@ package serviceTests;
 
 import dataAccess.DataAccessException;
 import model.UserData;
-import models.CreateGameRequest;
-import models.JoinGameRequest;
-import models.LoginRequest;
+import model.CreateGameRequest;
+import model.JoinGameRequest;
+import model.LoginRequest;
 import org.junit.jupiter.api.*;
 import service.ClearService;
 import service.GameService;

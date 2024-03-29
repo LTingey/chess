@@ -1,11 +1,10 @@
 package handlers;
 
-import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.GameData;
-import models.CreateGameRequest;
-import models.JoinGameRequest;
-import models.JoinRequestBody;
+import model.CreateGameRequest;
+import model.JoinGameRequest;
+import model.JoinRequestBody;
 import service.GameService;
 import spark.*;
 

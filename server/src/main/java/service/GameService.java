@@ -3,8 +3,8 @@ package service;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
-import models.CreateGameRequest;
-import models.JoinGameRequest;
+import model.CreateGameRequest;
+import model.JoinGameRequest;
 
 import java.util.HashSet;
 

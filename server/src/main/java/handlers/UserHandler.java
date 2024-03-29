@@ -1,10 +1,9 @@
 package handlers;
 
-import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.UserData;
-import models.LoginRequest;
-import models.LoginResult;
+import model.LoginRequest;
+import model.LoginResult;
 import service.UserService;
 import spark.*;
 
