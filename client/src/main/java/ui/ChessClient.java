@@ -4,20 +4,22 @@ import model.GameData;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import static ui.EscapeSequences.*;
 
 
 public class ChessClient {
-    private String url;
+//    private String url;                       for Websockets
     private static ServerFacade server;
-    private State state = State.SIGNEDIN;
+    private State state = State.SIGNEDOUT;
     private HashMap<Integer, Integer> gameIDs = new HashMap<>();
-    private int authToken;
+    private String authToken;
     private String currentSquareColor = SET_BG_COLOR_TAN;
 
     public ChessClient(String url) {
-        this.url = url;
+//        this.url = url;
         server = new ServerFacade(url);
     }
 
@@ -77,7 +79,8 @@ public class ChessClient {
         if (params.length > 0) {
             String username = params[0];
             String password = params[1];
-            authToken = server.login(username, password);
+            Map<String, String> result = server.login(username, password);
+            authToken = result.get("authToken");
             state = State.SIGNEDIN;
             return String.format("Logged in as %s", username);
         } else {
@@ -93,7 +96,8 @@ public class ChessClient {
             String username = params[0];
             String password = params[1];
             String email = params[2];
-            authToken = server.register(username, password, email);
+            Map<String, String> result = server.register(username, password, email);
+            authToken = result.get("authToken");
             state = State.SIGNEDIN;
             return String.format("Logged in as %s", username);
         } else {
@@ -107,9 +111,13 @@ public class ChessClient {
         // Calls the server logout API to logout the user
         // After logging out with the server, the client should transition to the Prelogin UI
         assertSignedIn();
-        server.logout();
+        String message = "";
+        Map<String, String> result = server.logout(authToken);
+        if (result != null) {
+            message = result.get("message");
+        }
         state = State.SIGNEDOUT;
-        return "";
+        return message;
     }
 
     public String createGame(String... params) throws ResponseException {
@@ -119,8 +127,14 @@ public class ChessClient {
         assertSignedIn();
         if (params.length > 0) {
             String gameName = params[0];
-            server.createGame(gameName);
-            return String.format("Created new game %s", gameName);
+            Map <String, String> result = server.createGame(gameName, authToken);
+
+            if (result.get("message") != null) {
+                return result.get("message");
+            }
+
+            String gameID = result.get("gameID");
+            return String.format("Created new game %s: %s", gameID, gameName);
         } else {
             throw new ResponseException("Expected: <NAME>");
         }
@@ -132,16 +146,24 @@ public class ChessClient {
         //      including the game name and players (not observers) in the game
         // The numbering for the list should be independent of the game IDs
         assertSignedIn();
-        GameData[] games = server.listGames();
+        Map<String, Object> result = server.listGames(authToken);
+
+        if (result.get("message") != null) {
+            return (String) result.get("message");
+        }
+
+        HashSet<GameData> games = (HashSet<GameData>) result.get("games");
         var gameList = new StringBuilder();
+        HashMap<Integer, Integer> newList = new HashMap<>();
         int i = 1;
         for (GameData game : games) {
             String gameInfo = String.format("%d. %s\tPlayers: " + SET_BG_COLOR_WHITE + "%s" + RESET_BG_COLOR + " " + SET_BG_COLOR_BLACK + "%s\n",
                     i, game.gameName(), game.whiteUsername(), game.blackUsername());
-            gameIDs.put(i, game.gameID());
+            newList.put(i, game.gameID());
             gameList.append(gameInfo);
             i += 1;
         }
+        gameIDs = newList;
         return gameList.toString();
     }
 
@@ -152,11 +174,20 @@ public class ChessClient {
         // Calls the server join API to join the user to the game
         assertSignedIn();
         if (params.length > 0) {
+            Map<String, String> result;
             if (params.length == 1) {
                 return joinObserver(params);
+            } else {
+                int gameID = Integer.parseInt(params[0]);
+                String color = params[1];
+                result = server.joinGame(gameID, color, authToken);
             }
-            int gameID = Integer.parseInt(params[0]);
-            String color = params[1];
+
+            if (result != null) {
+                return result.get("message");
+            }
+
+            // print board
             return makeBoards();
         } else {
             throw new ResponseException("Expected: <ID> [WHITE|BLACK|<empty>]");
@@ -168,8 +199,12 @@ public class ChessClient {
         // They should be able to enter the number of the desired game
         // Your client will need to keep track of which number corresponds to which game from the last time it listed the games
         // Calls the server join API to verify that the specified game exists
-        String gameID = params[0];
-        return null;
+        int gameID = Integer.parseInt(params[0]);
+        Map<String, String> result = server.joinGame(gameID, null, authToken);
+        if (result != null) {
+            return result.get("message");
+        }
+        return makeBoards();
     }
 
     private String makeBoards() {

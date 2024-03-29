@@ -33,7 +33,7 @@ public class GameHandler extends Handler {
     public static Object createGame(Request req, Response res) throws DataAccessException {
         String reqHeader = req.headers("authorization");
         var reqBody = getBody(req, Map.class);
-        Map<String, Object> resBody;
+        Map<String, String> resBody;
 
         try {
             // check if game name was provided so we can use toString
@@ -42,7 +42,7 @@ public class GameHandler extends Handler {
             }
             CreateGameRequest gameRequest = new CreateGameRequest(reqHeader, reqBody.get("gameName").toString());
             int gameID = gameService.createGame(gameRequest);
-            resBody = Map.of("gameID", gameID);
+            resBody = Map.of("gameID", Integer.toString(gameID));
             res.status(200);
         }
         catch (DataAccessException e) {
@@ -67,7 +67,7 @@ public class GameHandler extends Handler {
     public static Object joinGame(Request req, Response res) {
         String reqHeader = req.headers("authorization");
         var reqBody = getBody(req, JoinRequestBody.class);
-        Object resBody;
+        Map<String, String> resBody;
         JoinGameRequest gameReq = new JoinGameRequest(reqHeader, reqBody.playerColor(), reqBody.gameID());
 
         try {
