@@ -17,6 +17,11 @@ public class ServerFacade {
         this.url = url;
     }
 
+    public void clear() throws ResponseException {
+        var path = "/db";
+        makeRequest("DELETE", path, null, "", Map.class);
+    }
+
     public Map<String, String> register(String username, String password, String email) throws ResponseException {
         var path = "/user";
         var reqBody = new UserData(username, password, email);
@@ -66,7 +71,7 @@ public class ServerFacade {
 
             // write header
             if (!authToken.isEmpty()) {
-                http.addRequestProperty("authorization", "authToken");
+                http.addRequestProperty("authorization", authToken);
             }
             // write body
             if (requestBody != null) {
