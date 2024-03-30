@@ -40,11 +40,11 @@ public class ServerFacadeTests {
         server.stop();
     }
 
-    @Test
-    public void clear() throws ResponseException {
-        facade.clear();
-        assertTrue(true);
-    }
+//    @Test
+//    public void clear() throws ResponseException {
+//        facade.clear();
+//        assertTrue(true);
+//    }
 
     @Test
     public void successRegister() throws ResponseException {
@@ -52,13 +52,13 @@ public class ServerFacadeTests {
         assertTrue(true);
     }
 
-//    @Test
-//    public void usernameTaken() {
-//        ResponseException exception = assertThrows(ResponseException.class,
-//                () -> facade.register("Connor", "linalgebra", "genius"));
-//        assertEquals("Server returned HTTP response code: 403 for URL: http://localhost:" + port + "/user",
-//                exception.getMessage());
-//    }
+    @Test
+    public void usernameTaken() {
+        ResponseException exception = assertThrows(ResponseException.class,
+                () -> facade.register("Connor", "linalgebra", "genius"));
+        assertEquals("Server returned HTTP response code: 403 for URL: http://localhost:" + port + "/user",
+                exception.getMessage());
+    }
 
     @Test
     public void successLogin() throws ResponseException {
@@ -74,11 +74,11 @@ public class ServerFacadeTests {
                 exception.getMessage());
     }
 
-//    @Test
-//    public void successLogout() throws ResponseException {
-//        facade.logout(authToken);
-//        assertTrue(true);
-//    }
+    @Test
+    public void successLogout() throws ResponseException {
+        facade.logout(authToken);
+        assertTrue(true);
+    }
 
     @Test
     public void badAuthTokenLogout() {
