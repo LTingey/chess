@@ -32,6 +32,7 @@ public class ServerFacadeTests {
 
         Map<String, String> game = facade.createGame("The Game of Life", authToken);
         gameID = game.get("gameID");
+        facade.joinGame(Integer.parseInt(gameID), "white", authToken);
     }
 
     @AfterAll
@@ -39,10 +40,10 @@ public class ServerFacadeTests {
         server.stop();
     }
 
-//    @Test
-//    public void clear() throws ResponseException {
-//        facade.clear();
-//    }
+    @Test
+    public void clear() throws ResponseException {
+        facade.clear();
+    }
 
     @Test
     public void successRegister() throws ResponseException {
@@ -120,6 +121,14 @@ public class ServerFacadeTests {
         ResponseException exception = assertThrows(ResponseException.class,
                 () -> facade.joinGame(-3, "magenta", authToken));
         assertEquals("Server returned HTTP response code: 400 for URL: http://localhost:8080/game",
+                exception.getMessage());
+    }
+
+    @Test
+    public void colorTaken() {
+        ResponseException exception = assertThrows(ResponseException.class,
+                () -> facade.joinGame(Integer.parseInt(gameID), "white", authToken));
+        assertEquals("Server returned HTTP response code: 403 for URL: http://localhost:8080/game",
                 exception.getMessage());
     }
 }
