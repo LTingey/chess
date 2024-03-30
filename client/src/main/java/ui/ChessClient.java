@@ -1,11 +1,9 @@
 package ui;
 
 import model.GameData;
+import model.GameList;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 import static ui.EscapeSequences.*;
 
@@ -80,6 +78,9 @@ public class ChessClient {
             String username = params[0];
             String password = params[1];
             Map<String, String> result = server.login(username, password);
+            if (result == null) {
+                return "";
+            }
             authToken = result.get("authToken");
             state = State.SIGNEDIN;
             return String.format("Logged in as %s", username);
@@ -97,6 +98,9 @@ public class ChessClient {
             String password = params[1];
             String email = params[2];
             Map<String, String> result = server.register(username, password, email);
+            if (result == null) {
+                return "";
+            }
             authToken = result.get("authToken");
             state = State.SIGNEDIN;
             return String.format("Logged in as %s", username);
@@ -113,9 +117,6 @@ public class ChessClient {
         assertSignedIn();
         String message = "";
         Map<String, String> result = server.logout(authToken);
-        if (result != null) {
-            message = result.get("message");
-        }
         state = State.SIGNEDOUT;
         return message;
     }
@@ -129,8 +130,8 @@ public class ChessClient {
             String gameName = params[0];
             Map <String, String> result = server.createGame(gameName, authToken);
 
-            if (result.get("message") != null) {
-                return result.get("message");
+            if (result == null) {
+                return "";
             }
 
             String gameID = result.get("gameID");
@@ -146,19 +147,15 @@ public class ChessClient {
         //      including the game name and players (not observers) in the game
         // The numbering for the list should be independent of the game IDs
         assertSignedIn();
-        Map<String, Object> result = server.listGames(authToken);
-
-        if (result.get("message") != null) {
-            return (String) result.get("message");
-        }
-
-        HashSet<GameData> games = (HashSet<GameData>) result.get("games");
+        Map<String, ArrayList<GameData>> result = server.listGames(authToken);
+        ArrayList<GameData> games = result.get("games");
         var gameList = new StringBuilder();
         HashMap<Integer, Integer> newList = new HashMap<>();
         int i = 1;
         for (GameData game : games) {
-            String gameInfo = String.format("%d. %s\tPlayers: " + SET_BG_COLOR_WHITE + "%s" + RESET_BG_COLOR + " " + SET_BG_COLOR_BLACK + "%s\n",
-                    i, game.gameName(), game.whiteUsername(), game.blackUsername());
+            String gameInfo = String.format("%d. %s\tPlayers: " + SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_WHITE + " %s "
+                            + SET_TEXT_COLOR_BLACK + "%s " + RESET_BG_COLOR + SET_TEXT_COLOR_BLUE + "\n",
+                            i, game.gameName(), game.whiteUsername(), game.blackUsername());
             newList.put(i, game.gameID());
             gameList.append(gameInfo);
             i += 1;
@@ -199,12 +196,16 @@ public class ChessClient {
         // They should be able to enter the number of the desired game
         // Your client will need to keep track of which number corresponds to which game from the last time it listed the games
         // Calls the server join API to verify that the specified game exists
-        int gameID = Integer.parseInt(params[0]);
-        Map<String, String> result = server.joinGame(gameID, null, authToken);
-        if (result != null) {
-            return result.get("message");
+        if (params.length > 0) {
+            int gameID = Integer.parseInt(params[0]);
+            Map<String, String> result = server.joinGame(gameID, null, authToken);
+            if (result != null) {
+                return result.get("message");
+            }
+            return makeBoards();
+        } else {
+            throw new ResponseException("Expected: <ID>");
         }
-        return makeBoards();
     }
 
     private String makeBoards() {

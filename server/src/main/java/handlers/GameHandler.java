@@ -8,17 +8,17 @@ import model.JoinRequestBody;
 import service.GameService;
 import spark.*;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class GameHandler extends Handler {
     static GameService gameService = new GameService();
     public static Object listGames(Request req, Response res) {
         String reqHeader = req.headers("authorization");
-        Map<String, Object> resBody = null;
+        Map<String, ArrayList<GameData>> resBody = null;
 
         try {
-            HashSet<GameData> listRes = gameService.listGames(reqHeader);
+            ArrayList<GameData> listRes = gameService.listGames(reqHeader);
             resBody = Map.of("games", listRes);
             res.status(200);
         }

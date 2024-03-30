@@ -1,10 +1,12 @@
 package clientTests;
 
+import model.GameData;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.ResponseException;
 import ui.ServerFacade;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,7 +85,8 @@ public class ServerFacadeTests {
 
     @Test
     public void successListGames() throws ResponseException {
-        facade.listGames(authToken);
+        Map<String, ArrayList<GameData>> result = facade.listGames(authToken);
+        assertEquals(ArrayList.class, result.get("games").getClass());
     }
 
     @Test

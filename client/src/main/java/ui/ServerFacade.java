@@ -1,9 +1,13 @@
 package ui;
 
+import com.google.gson.reflect.TypeToken;
 import model.*;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
@@ -42,10 +46,11 @@ public class ServerFacade {
         return resBody;
     }
 
-    public Map<String, Object> listGames(String authToken) throws ResponseException {
+    public Map<String, ArrayList<GameData>> listGames(String authToken) throws ResponseException {
         var path = "/game";
-        var resBody = makeRequest("GET", path, null, authToken, Map.class);
-        return resBody;
+        Type type = new TypeToken<Map<String, ArrayList<GameData>>>() {}.getType();
+        var resBody = makeRequest("GET", path, null, authToken, type);
+        return (Map<String, ArrayList<GameData>>) resBody;
     }
 
     public Map<String, String> createGame(String gameName, String authToken) throws ResponseException {
@@ -86,6 +91,30 @@ public class ServerFacade {
         }
     }
 
+    private <T> T makeRequest(String method, String path, Object requestBody, String authToken, Type type) throws ResponseException {
+        try {
+            URL url = (new URI(this.url + path)).toURL();
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod(method);
+            http.setDoOutput(true);
+
+            // write header
+            if (!authToken.isEmpty()) {
+                http.addRequestProperty("authorization", authToken);
+            }
+            // write body
+            if (requestBody != null) {
+                writeBody(requestBody, http);
+            }
+
+            http.connect();
+            return readBody(http, type);
+
+        } catch (Exception ex) {
+            throw new ResponseException(ex.getMessage());
+        }
+    }
+
     private static void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
             http.addRequestProperty("Content-Type", "application/json");
@@ -103,6 +132,19 @@ public class ServerFacade {
                 InputStreamReader reader = new InputStreamReader(respBody);
                 if (responseClass != null) {
                     response = new Gson().fromJson(reader, responseClass);
+                }
+            }
+        }
+        return response;
+    }
+
+    private static <T> T readBody(HttpURLConnection http, Type type) throws IOException {
+        T response = null;
+        if (http.getContentLength() < 0) {
+            try (InputStream respBody = http.getInputStream()) {
+                InputStreamReader reader = new InputStreamReader(respBody);
+                if (type != null) {
+                    response = new Gson().fromJson(reader, type);
                 }
             }
         }

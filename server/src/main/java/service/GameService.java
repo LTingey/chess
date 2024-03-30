@@ -6,12 +6,14 @@ import model.GameData;
 import model.CreateGameRequest;
 import model.JoinGameRequest;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class GameService extends Service {
-    public HashSet<GameData> listGames(String authToken) throws DataAccessException {
+    public ArrayList<GameData> listGames(String authToken) throws DataAccessException {
         checkAuthorization(authToken);
-        return gameDAO.listGames();
+        var gameList = new ArrayList<>(gameDAO.listGames());
+        return gameList;
     }
 
     public int createGame(CreateGameRequest request) throws DataAccessException {
@@ -30,13 +32,13 @@ public class GameService extends Service {
         AuthData userAuth = authDAO.getAuth(request.authToken());
         if (request.playerColor() != null) {
             // if a color is specified, add the caller as the requested color to the game
-            if (request.playerColor().equals("WHITE")) {
+            if (request.playerColor().equals("white")) {
                 if (existingGame.whiteUsername() != null) {
                     throw new DataAccessException("Error: already taken");
                 }
                 GameData updatedGame = new GameData(existingGame.gameID(), userAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game());
                 gameDAO.updateGame(updatedGame);
-            } else {
+            } else if (request.playerColor().equals("black")) {
                 if (existingGame.blackUsername() != null) {
                     throw new DataAccessException("Error: already taken");
                 }
