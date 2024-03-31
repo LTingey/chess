@@ -33,13 +33,13 @@ public class GameService extends Service {
         if (request.playerColor() != null) {
             // if a color is specified, add the caller as the requested color to the game
             if (request.playerColor().equals("white")) {
-                if (existingGame.whiteUsername() != null) {
+                if (existingGame.whiteUsername() != null && !existingGame.whiteUsername().equals(userAuth.username())) {
                     throw new DataAccessException("Error: already taken");
                 }
                 GameData updatedGame = new GameData(existingGame.gameID(), userAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game());
                 gameDAO.updateGame(updatedGame);
             } else if (request.playerColor().equals("black")) {
-                if (existingGame.blackUsername() != null) {
+                if (existingGame.blackUsername() != null && !existingGame.blackUsername().equals(userAuth.username())) {
                     throw new DataAccessException("Error: already taken");
                 }
                 GameData updatedGame = new GameData(existingGame.gameID(), existingGame.whiteUsername(), userAuth.username(), existingGame.gameName(), existingGame.game());

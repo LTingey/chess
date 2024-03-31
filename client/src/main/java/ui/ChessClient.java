@@ -12,7 +12,7 @@ public class ChessClient {
 //    private String url;                       for Websockets
     private static ServerFacade server;
     private State state = State.SIGNEDOUT;
-    private HashMap<Integer, Integer> gameIDs = new HashMap<>();
+    private ArrayList<Integer> gameIDs = new ArrayList<>();
     private String authToken;
     private String currentSquareColor = SET_BG_COLOR_TAN;
 
@@ -150,13 +150,13 @@ public class ChessClient {
         Map<String, ArrayList<GameData>> result = server.listGames(authToken);
         ArrayList<GameData> games = result.get("games");
         var gameList = new StringBuilder();
-        HashMap<Integer, Integer> newList = new HashMap<>();
-        int i = 1;
+        ArrayList<Integer> newList = new ArrayList<>();
+        int i = 0;
         for (GameData game : games) {
             String gameInfo = String.format("%d. %s\tPlayers: " + SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_WHITE + " %s "
                             + SET_TEXT_COLOR_BLACK + "%s " + RESET_BG_COLOR + SET_TEXT_COLOR_BLUE + "\n",
-                            i, game.gameName(), game.whiteUsername(), game.blackUsername());
-            newList.put(i, game.gameID());
+                            i+1, game.gameName(), game.whiteUsername(), game.blackUsername());
+            newList.add(game.gameID());
             gameList.append(gameInfo);
             i += 1;
         }
@@ -175,7 +175,8 @@ public class ChessClient {
             if (params.length == 1) {
                 return joinObserver(params);
             } else {
-                int gameID = Integer.parseInt(params[0]);
+                int gameNum = Integer.parseInt(params[0]);
+                int gameID = gameIDs.get(gameNum-1);
                 String color = params[1];
                 result = server.joinGame(gameID, color, authToken);
             }
@@ -197,7 +198,8 @@ public class ChessClient {
         // Your client will need to keep track of which number corresponds to which game from the last time it listed the games
         // Calls the server join API to verify that the specified game exists
         if (params.length > 0) {
-            int gameID = Integer.parseInt(params[0]);
+            int gameNum = Integer.parseInt(params[0]);
+            int gameID = gameIDs.get(gameNum-1);
             Map<String, String> result = server.joinGame(gameID, null, authToken);
             if (result != null) {
                 return result.get("message");

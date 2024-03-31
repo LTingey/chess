@@ -109,7 +109,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void badAuthTokenCreate() throws ResponseException {
+    public void badAuthTokenCreate() {
         ResponseException exception = assertThrows(ResponseException.class,
                 () -> facade.createGame("DumbGame", "dumbauthtoken"));
         assertEquals("Server returned HTTP response code: 401 for URL: http://localhost:" + port + "/game",
@@ -129,12 +129,4 @@ public class ServerFacadeTests {
         assertEquals("Server returned HTTP response code: 400 for URL: http://localhost:" + port + "/game",
                 exception.getMessage());
     }
-
-//    @Test
-//    public void colorTaken() {
-//        ResponseException exception = assertThrows(ResponseException.class,
-//                () -> facade.joinGame(Integer.parseInt(gameID), "white", authToken));
-//        assertEquals("Server returned HTTP response code: 403 for URL: http://localhost:" + port + "/game",
-//                exception.getMessage());
-//    }
 }
