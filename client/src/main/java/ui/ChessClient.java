@@ -1,7 +1,6 @@
 package ui;
 
 import model.GameData;
-import model.GameList;
 
 import java.util.*;
 
@@ -9,7 +8,7 @@ import static ui.EscapeSequences.*;
 
 
 public class ChessClient {
-//    private String url;                       for Websockets
+    private String url;
     private static ServerFacade server;
     private State state = State.SIGNEDOUT;
     private ArrayList<Integer> gameIDs = new ArrayList<>();
@@ -17,7 +16,7 @@ public class ChessClient {
     private String currentSquareColor = SET_BG_COLOR_TAN;
 
     public ChessClient(String url) {
-//        this.url = url;
+        this.url = url;
         server = new ServerFacade(url);
     }
 
@@ -43,6 +42,11 @@ public class ChessClient {
             case "list" -> listGames();
             case "join" -> joinGame(parameters);
             case "observe" -> joinObserver(parameters);
+            case "redraw" -> redrawBoard();
+            case "leave" -> leave();
+            case "make" -> makeMove(parameters);
+            case "resign" -> resign();
+            case "highlight" -> legalMoves();
             default -> help();
         };
     }
@@ -56,7 +60,7 @@ public class ChessClient {
                     quit
                     help
                     """;
-        } else {
+        } else if (state == State.SIGNEDIN) {
             return """
                     create <NAME>
                     list
@@ -64,6 +68,15 @@ public class ChessClient {
                     observe <ID>
                     logout
                     quit
+                    help
+                    """;
+        } else {
+            return """
+                    redraw chess board
+                    leave
+                    make move <PIECE> <DESTINATION>
+                    resign
+                    highlight legal moves
                     help
                     """;
         }
@@ -322,6 +335,28 @@ public class ChessClient {
                 return SET_BG_COLOR_BROWN;
             }
         }
+    }
+
+    // Gameplay UI
+    private String redrawBoard() {
+        return "";
+    }
+
+    private String leave() {
+        state = State.SIGNEDIN;
+        return "";
+    }
+
+    private String makeMove(String... params) {
+        return "";
+    }
+
+    private String resign() {
+        return "";
+    }
+
+    private String legalMoves() {
+        return "";
     }
 
     private void assertSignedIn() throws ResponseException {
