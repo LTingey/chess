@@ -24,7 +24,7 @@ public class Repl {
                 output = client.evalInput(line);
                 System.out.print(output + RESET_TEXT_COLOR + RESET_BG_COLOR);
             } catch (Throwable e) {
-                String message = SET_TEXT_COLOR_RED + e.getMessage() + "\n";
+                String message = SET_TEXT_COLOR_RED + "Unexpected error: " + e.getMessage();
                 System.out.print(message);
             }
         }

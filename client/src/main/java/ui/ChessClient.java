@@ -41,7 +41,7 @@ public class ChessClient {
             case "create" -> createGame(parameters);
             case "list" -> listGames();
             case "join" -> joinGame(parameters);
-            case "observe" -> joinObserver(parameters);
+            case "observe" -> observeGame(parameters);
             case "redraw" -> redrawBoard();
             case "leave" -> leave();
             case "make" -> makeMove(parameters);
@@ -52,7 +52,6 @@ public class ChessClient {
     }
 
     public String help() {
-        // Displays text informing the user what actions they can take
         if (state == State.SIGNEDOUT) {
             return """
                     register <USERNAME> <PASSWORD> <EMAIL>
@@ -83,29 +82,8 @@ public class ChessClient {
     }
 
     // Prelogin UI
-    public String login(String... params) throws ResponseException {
-        // Prompts the user to input login information
-        // Calls the server login API to login the user
-        // When successfully logged in, the client should transition to the Postlogin UI
-        if (params.length > 0) {
-            String username = params[0];
-            String password = params[1];
-            Map<String, String> result = server.login(username, password);
-            if (result == null) {
-                return "";
-            }
-            authToken = result.get("authToken");
-            state = State.SIGNEDIN;
-            return String.format("Logged in as %s", username);
-        } else {
-            throw new ResponseException("Expected: <USERNAME> <PASSWORD>");
-        }
-    }
-
     public String register(String... params) throws ResponseException {
-        // Prompts the user to input registration information
-        // Calls the server register API to register and login the user
-        // If successfully registered, the client should be logged in and transition to the Postlogin UI
+        assertSignedOut();
         if (params.length > 0) {
             String username = params[0];
             String password = params[1];
@@ -122,31 +100,43 @@ public class ChessClient {
         }
     }
 
-    // Postlogin UI
-    public String logout() throws ResponseException {
-        // Logs out the user
-        // Calls the server logout API to logout the user
-        // After logging out with the server, the client should transition to the Prelogin UI
-        assertSignedIn();
-        String message = "";
-        Map<String, String> result = server.logout(authToken);
-        state = State.SIGNEDOUT;
-        return message;
-    }
-
-    public String createGame(String... params) throws ResponseException {
-        // Allows the user to input a name for the new game
-        // Calls the server create API to create the game
-        // This does not join the player to the created game; it only creates the new game in the server
-        assertSignedIn();
+    public String login(String... params) throws ResponseException {
+        assertSignedOut();
         if (params.length > 0) {
-            String gameName = params[0];
-            Map <String, String> result = server.createGame(gameName, authToken);
-
+            String username = params[0];
+            String password = params[1];
+            Map<String, String> result = server.login(username, password);
             if (result == null) {
                 return "";
             }
+            authToken = result.get("authToken");
+            state = State.SIGNEDIN;
+            return String.format("Logged in as %s", username);
+        } else {
+            throw new ResponseException("Expected: <USERNAME> <PASSWORD>");
+        }
+    }
 
+    // Postlogin UI
+    public String logout() throws ResponseException {
+        assertSignedIn();
+        server.logout(authToken);
+        state = State.SIGNEDOUT;
+        return "Logged out";
+    }
+
+    public String createGame(String... params) throws ResponseException {
+        assertSignedIn();
+        if (params.length > 0) {
+            StringBuilder gameName = new StringBuilder();
+            // account for spaces in gameName
+            for (String param : params) {
+                gameName.append(param).append(" ");
+            }
+            Map <String, String> result = server.createGame(gameName.toString(), authToken);
+            if (result == null) {
+                return "";
+            }
             String gameID = result.get("gameID");
             return String.format("Created new game %s: %s", gameID, gameName);
         } else {
@@ -155,13 +145,12 @@ public class ChessClient {
     }
 
     public String listGames() throws ResponseException {
-        // Lists all the games that currently exist on the server
-        // Calls the server list API to get all the game data, and displays the games in a numbered list,
-        //      including the game name and players (not observers) in the game
-        // The numbering for the list should be independent of the game IDs
         assertSignedIn();
         Map<String, ArrayList<GameData>> result = server.listGames(authToken);
         ArrayList<GameData> games = result.get("games");
+        if (games.isEmpty()) {
+            return "No games yet.";
+        }
         var gameList = new StringBuilder();
         ArrayList<Integer> newList = new ArrayList<>();
         int i = 0;
@@ -178,55 +167,105 @@ public class ChessClient {
     }
 
     public String joinGame(String... params) throws ResponseException {
-        // Allows the user to specify which game they want to join and what color they want to play
-        // They should be able to enter the number of the desired game
-        // Your client will need to keep track of which number corresponds to which game from the last time it listed the games
-        // Calls the server join API to join the user to the game
         assertSignedIn();
         if (params.length > 0) {
-            Map<String, String> result;
             if (params.length == 1) {
-                return joinObserver(params);
+                return observeGame(params);
             } else {
-                int gameNum = Integer.parseInt(params[0]);
-                int gameID = gameIDs.get(gameNum-1);
-                String color = params[1];
-                result = server.joinGame(gameID, color, authToken);
+                return joinHelper(params[0], params[1]);
             }
-
-            if (result != null) {
-                return result.get("message");
-            }
-
-            // print board
-            return makeBoards();
         } else {
             throw new ResponseException("Expected: <ID> [WHITE|BLACK|<empty>]");
         }
     }
 
-    public String joinObserver(String... params) throws ResponseException {
-        // Allows the user to specify which game they want to observe
-        // They should be able to enter the number of the desired game
-        // Your client will need to keep track of which number corresponds to which game from the last time it listed the games
-        // Calls the server join API to verify that the specified game exists
+    public String observeGame(String... params) throws ResponseException {
         if (params.length > 0) {
-            int gameNum = Integer.parseInt(params[0]);
-            int gameID = gameIDs.get(gameNum-1);
-            Map<String, String> result = server.joinGame(gameID, null, authToken);
-            if (result != null) {
-                return result.get("message");
-            }
-            return makeBoards();
+            return joinHelper(params[0], null);
         } else {
             throw new ResponseException("Expected: <ID>");
         }
     }
 
-    private String makeBoards() {
-        var output = new StringBuilder();
-        output.append(whiteView()).append("\n\n").append(blackView());
-        return output.toString();
+    private String joinHelper(String gameID, String playerColor) throws ResponseException {
+        Map<String, String> result;
+        try {
+            // check that the given ID is an int
+            int gameNum = Integer.parseInt(gameID);
+            int index = gameNum - 1;
+            // check that the game exists
+            if (index < 0 || index >= gameIDs.size()) {
+                return "Game " + gameNum + " does not exist. Please choose a number from the list.";
+            }
+            result = server.joinGame(gameIDs.get(gameNum-1), playerColor, authToken);
+            if (result != null) {
+                return "";
+            }
+            state = State.INGAME;
+            // print board
+            if (playerColor == null || playerColor.equals("white")) {
+                return whiteView();
+            } else {
+                return blackView();
+            }
+        } catch (NumberFormatException e) {
+            return "Game ID must be a number.";
+        }
+    }
+
+    // Gameplay UI
+    public String redrawBoard() throws ResponseException {
+        assertInGame();
+        return "";
+    }
+
+    public String leave() throws ResponseException {
+        assertInGame();
+        state = State.SIGNEDIN;
+        return "Leaving game";
+    }
+
+    public String makeMove(String... params) throws ResponseException {
+        // Allow the user to input what move they want to make.
+        // The board is updated to reflect the result of the move,
+        // and the board automatically updates on all clients involved in the game.
+        assertInGame();
+        return "";
+    }
+
+    public String resign() throws ResponseException {
+        // Prompts the user to confirm they want to resign.
+        // If they do, the user forfeits the game and the game is over.
+        // Does not cause the user to leave the game.
+        assertInGame();
+        return "";
+    }
+
+    public String legalMoves() throws ResponseException {
+        // Allows the user to input what piece for which they want to highlight legal moves.
+        // The selected piece’s current square and all squares it can legally move to are highlighted.
+        // This is a local operation and has no effect on remote users’ screens.
+        assertInGame();
+        return "";
+    }
+
+    // helpers
+    private void assertSignedOut() throws ResponseException {
+        if (state != State.SIGNEDOUT) {
+            throw new ResponseException("You must logout first");
+        }
+    }
+
+    private void assertSignedIn() throws ResponseException {
+        if (state != State.SIGNEDIN) {
+            throw new ResponseException("You must login first");
+        }
+    }
+
+    private void assertInGame() throws ResponseException {
+        if (state != State.INGAME) {
+            throw new ResponseException("You must join a game first");
+        }
     }
 
     private String whiteView() {
@@ -334,34 +373,6 @@ public class ChessClient {
                 currentSquareColor = SET_BG_COLOR_BROWN;
                 return SET_BG_COLOR_BROWN;
             }
-        }
-    }
-
-    // Gameplay UI
-    private String redrawBoard() {
-        return "";
-    }
-
-    private String leave() {
-        state = State.SIGNEDIN;
-        return "";
-    }
-
-    private String makeMove(String... params) {
-        return "";
-    }
-
-    private String resign() {
-        return "";
-    }
-
-    private String legalMoves() {
-        return "";
-    }
-
-    private void assertSignedIn() throws ResponseException {
-        if (state == State.SIGNEDOUT) {
-            throw new ResponseException("You must login first");
         }
     }
 }

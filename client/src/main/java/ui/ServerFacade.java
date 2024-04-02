@@ -7,11 +7,12 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 
 import com.google.gson.Gson;
+
+// TODO: catch server errors and throw more descriptive Response Errors
+// TODO: fix duplicate code
 
 public class ServerFacade {
     // makes the HTTP requests and sends them to server
@@ -40,10 +41,9 @@ public class ServerFacade {
         return resBody;
     }
 
-    public Map<String, String> logout(String authToken) throws ResponseException {
+    public void logout(String authToken) throws ResponseException {
         var path = "/session";
-        var resBody = makeRequest("DELETE", path, null, authToken, Map.class);
-        return resBody;
+        makeRequest("DELETE", path, null, authToken, Map.class);
     }
 
     public Map<String, ArrayList<GameData>> listGames(String authToken) throws ResponseException {
